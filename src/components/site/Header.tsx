@@ -15,6 +15,7 @@ const links = [
 
 export function Header() {
   const [open, setOpen] = useState(false);
+  const { user } = useAuth();
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
