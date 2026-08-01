@@ -97,9 +97,9 @@
 
   --gradient-hero: linear-gradient(
     180deg,
-    color-mix(in oklab, var(--navy-deep) 60%, transparent) 0%,
-    color-mix(in oklab, var(--navy-deep) 25%, transparent) 45%,
-    color-mix(in oklab, var(--navy-deep) 80%, transparent) 100%
+    oklch(0.15 0.05 265 / 0.2) 0%,
+    oklch(0.12 0.05 265 / 0.75) 70%,
+    oklch(0.1 0.04 265 / 0.95) 100%
   );
   --gradient-gold: linear-gradient(135deg, var(--gold) 0%, var(--gold-soft) 100%);
   --shadow-soft: 0 10px 30px -12px oklch(0.24 0.08 264 / 0.18);
