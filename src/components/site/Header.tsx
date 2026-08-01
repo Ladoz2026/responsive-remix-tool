@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
+import { Link } from "@tanstack/react-router";
 import { Crown, Menu, X } from "lucide-react";
+
+import { useAuth } from "@/hooks/useAuth";
 
 const links = [
   { label: "Acheter", href: "#properties" },
