@@ -84,29 +84,44 @@ export function Header() {
         </button>
       </div>
 
-      {open && (
-        <div className="mx-auto mt-2 max-w-7xl rounded-2xl bg-card p-4 shadow-elevated lg:hidden">
-          <nav className="grid gap-1">
-            {links.map((l) => (
+      <div
+        className={`mx-auto max-w-7xl overflow-hidden transition-[grid-template-rows,opacity] duration-400 ease-out lg:hidden ${
+          open ? "mt-2 grid grid-rows-[1fr] opacity-100" : "grid grid-rows-[0fr] opacity-0"
+        }`}
+      >
+        <div className="min-h-0 overflow-hidden">
+          <div className="rounded-2xl bg-card p-4 shadow-elevated">
+            <nav className="grid gap-1">
+              {links.map((l, i) => (
+                <a
+                  key={l.label}
+                  href={l.href}
+                  onClick={() => setOpen(false)}
+                  style={{
+                    transitionDelay: open ? `${80 + i * 45}ms` : "0ms",
+                  }}
+                  className={`rounded-lg px-3 py-2.5 text-sm font-medium text-foreground transition-all duration-300 ease-out hover:bg-secondary hover:pl-5 hover:text-gold ${
+                    open ? "translate-x-0 opacity-100" : "-translate-x-3 opacity-0"
+                  }`}
+                >
+                  {l.label}
+                </a>
+              ))}
               <a
-                key={l.label}
-                href={l.href}
+                href="#cta"
                 onClick={() => setOpen(false)}
-                className="rounded-lg px-3 py-2.5 text-sm font-medium text-foreground hover:bg-secondary"
+                style={{ transitionDelay: open ? `${80 + links.length * 45}ms` : "0ms" }}
+                className={`mt-2 rounded-full gold-gradient px-4 py-2.5 text-center text-sm font-bold text-accent-foreground transition-all duration-300 ease-out ${
+                  open ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0"
+                }`}
               >
-                {l.label}
+                Publier une annonce
               </a>
-            ))}
-            <a
-              href="#cta"
-              onClick={() => setOpen(false)}
-              className="mt-2 rounded-full gold-gradient px-4 py-2.5 text-center text-sm font-bold text-accent-foreground"
-            >
-              Publier une annonce
-            </a>
-          </nav>
+            </nav>
+          </div>
         </div>
-      )}
+      </div>
+
     </header>
   );
 }
