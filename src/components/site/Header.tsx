@@ -56,20 +56,20 @@ export function Header() {
         </nav>
 
         <div className="ml-auto hidden items-center gap-3 lg:flex">
-          <a
-            href="#cta"
+          <Link
+            to={user ? "/dashboard" : "/auth"}
             className={`text-sm font-medium transition-colors hover:text-gold ${
               scrolled ? "text-foreground" : "text-primary-foreground"
             }`}
           >
-            Connexion
-          </a>
-          <a
-            href="#cta"
+            {user ? "Mon espace" : "Connexion"}
+          </Link>
+          <Link
+            to={user ? "/dashboard" : "/auth"}
             className="rounded-full gold-gradient px-5 py-2.5 text-sm font-bold text-accent-foreground shadow-gold transition-transform hover:-translate-y-0.5"
           >
             Publier une annonce
-          </a>
+          </Link>
         </div>
 
         <button
