@@ -26,7 +26,7 @@ export function Hero() {
           height={1200}
           className="absolute inset-0 h-full w-full object-cover"
         />
-        <div className="absolute inset-0 hero-overlay" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,oklch(0.55_0.20_260/0.35),transparent_60%)]" />
 
         <div className="relative mx-auto flex min-h-[92vh] max-w-7xl flex-col justify-center px-4 pt-32 pb-40 sm:px-6">
           <span className="inline-flex w-fit items-center gap-2 rounded-full glass-panel px-4 py-2 text-xs font-semibold text-primary-foreground sm:text-sm">
