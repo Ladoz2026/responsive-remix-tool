@@ -33,6 +33,7 @@ export function Header() {
       : []),
     ...(user && (isAdmin || isAgent || isOwner) ? [{ label: "CRM", href: "/crm" }] : []),
     ...(isAdmin ? [{ label: "Admin", href: "/admin" }] : []),
+    ...(user && (isAdmin || isAgent || isOwner) ? [{ label: "Stats", href: "/statistiques" }] : []),
     ...(isAdmin ? [{ label: "Newsletter", href: "/newsletter" }] : []),
   ];
 
