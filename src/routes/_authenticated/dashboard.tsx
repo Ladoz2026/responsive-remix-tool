@@ -1,7 +1,20 @@
 import { useEffect, useMemo, useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Building2, Crown, Loader2, LogOut, MessageSquare, Plus, Trash2 } from "lucide-react";
+import {
+  BarChart3,
+  Building2,
+  Crown,
+  Eye,
+  Loader2,
+  LogOut,
+  Mail,
+  MessageSquare,
+  Phone,
+  Plus,
+  Trash2,
+  Wallet,
+} from "lucide-react";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -20,11 +33,14 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 import type { Database } from "@/integrations/supabase/types";
+import { formatPrice } from "@/lib/format";
 
 type PropertyType = Database["public"]["Enums"]["property_type"];
 type TransactionType = Database["public"]["Enums"]["transaction_type"];
+type RequestStatus = Database["public"]["Enums"]["request_status"];
 type Property = Database["public"]["Tables"]["properties"]["Row"];
 type ContactRequest = Database["public"]["Tables"]["contact_requests"]["Row"];
+
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
