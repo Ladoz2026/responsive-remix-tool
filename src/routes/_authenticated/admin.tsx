@@ -17,6 +17,7 @@ type AppRole = Database["public"]["Enums"]["app_role"];
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
     meta: [
+      { name: "robots", content: "noindex, nofollow" },
       { title: "Administration | SeLoger CI" },
       {
         name: "description",

@@ -20,6 +20,7 @@ type SavedSearch = Database["public"]["Tables"]["saved_searches"]["Row"];
 export const Route = createFileRoute("/_authenticated/alertes")({
   head: () => ({
     meta: [
+      { name: "robots", content: "noindex, nofollow" },
       { title: "Mes alertes immobilières | SeLoger CI" },
       {
         name: "description",

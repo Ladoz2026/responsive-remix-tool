@@ -12,6 +12,7 @@ import { supabase } from "@/integrations/supabase/client";
 export const Route = createFileRoute("/mot-de-passe-oublie")({
   head: () => ({
     meta: [
+      { name: "robots", content: "noindex, nofollow" },
       { title: "Mot de passe oublié | SeLoger CI" },
       {
         name: "description",

@@ -21,7 +21,26 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: title },
       { property: "og:description", content: description },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://seloger-ci.poroinfo.net/" },
       { name: "twitter:card", content: "summary_large_image" },
+    ],
+    links: [{ rel: "canonical", href: "https://seloger-ci.poroinfo.net/" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: "SeLoger CI",
+          url: "https://seloger-ci.poroinfo.net",
+          potentialAction: {
+            "@type": "SearchAction",
+            target:
+              "https://seloger-ci.poroinfo.net/recherche?ville={search_term_string}",
+            "query-input": "required name=search_term_string",
+          },
+        }),
+      },
     ],
   }),
   component: Index,

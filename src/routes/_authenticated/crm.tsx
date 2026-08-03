@@ -38,6 +38,7 @@ type LeadNote = Database["public"]["Tables"]["lead_notes"]["Row"];
 export const Route = createFileRoute("/_authenticated/crm")({
   head: () => ({
     meta: [
+      { name: "robots", content: "noindex, nofollow" },
       { title: "CRM – Suivi des leads | SeLoger CI" },
       {
         name: "description",
