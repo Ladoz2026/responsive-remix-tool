@@ -79,14 +79,37 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "SeLoger CI — Immobilier vérifié en Côte d'Ivoire" },
+      {
+        name: "description",
+        content:
+          "Plateforme immobilière ivoirienne : achat, location et vente de biens vérifiés à Abidjan et dans toute la Côte d'Ivoire.",
+      },
+      { name: "author", content: "SeLoger CI" },
+      { property: "og:site_name", content: "SeLoger CI" },
+      { property: "og:locale", content: "fr_CI" },
+      { property: "og:title", content: "SeLoger CI — Immobilier vérifié en Côte d'Ivoire" },
+      {
+        property: "og:description",
+        content:
+          "Achat, location et vente de biens immobiliers vérifiés en Côte d'Ivoire.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "RealEstateAgent",
+          name: "SeLoger CI",
+          url: "https://seloger-ci.poroinfo.net",
+          areaServed: "CI",
+          description:
+            "Plateforme immobilière ivoirienne d'annonces vérifiées : villas, appartements, terrains et bureaux.",
+        }),
+      },
     ],
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
