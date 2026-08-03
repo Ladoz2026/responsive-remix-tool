@@ -1,7 +1,20 @@
 import { useEffect, useMemo, useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Building2, Crown, Loader2, LogOut, MessageSquare, Plus, Trash2 } from "lucide-react";
+import {
+  BarChart3,
+  Building2,
+  Crown,
+  Eye,
+  Loader2,
+  LogOut,
+  Mail,
+  MessageSquare,
+  Phone,
+  Plus,
+  Trash2,
+  Wallet,
+} from "lucide-react";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -20,11 +33,14 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 import type { Database } from "@/integrations/supabase/types";
+import { formatPrice } from "@/lib/format";
 
 type PropertyType = Database["public"]["Enums"]["property_type"];
 type TransactionType = Database["public"]["Enums"]["transaction_type"];
+type RequestStatus = Database["public"]["Enums"]["request_status"];
 type Property = Database["public"]["Tables"]["properties"]["Row"];
 type ContactRequest = Database["public"]["Tables"]["contact_requests"]["Row"];
+
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
@@ -114,6 +130,33 @@ function Dashboard() {
     },
   });
 
+  const viewsQuery = useQuery({
+    queryKey: ["my-views", userId],
+    enabled: !!userId,
+    queryFn: async (): Promise<{ property_id: string; created_at: string }[]> => {
+      const { data, error } = await supabase
+        .from("property_views")
+        .select("property_id, created_at")
+        .order("created_at", { ascending: false })
+        .limit(5000);
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
+
+  const requestStatusMutation = useMutation({
+    mutationFn: async ({ id, status }: { id: string; status: RequestStatus }) => {
+      const { error } = await supabase.from("contact_requests").update({ status }).eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success("Statut du lead mis à jour");
+      queryClient.invalidateQueries({ queryKey: ["my-requests"] });
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+
   const createMutation = useMutation({
     mutationFn: async () => {
       const parsed = propertySchema.safeParse({
@@ -173,14 +216,39 @@ function Dashboard() {
   });
 
   const properties = propertiesQuery.data ?? [];
+  const requests = requestsQuery.data ?? [];
+  const views = viewsQuery.data ?? [];
+
+  const perProperty = useMemo(() => {
+    const since = Date.now() - 30 * 24 * 3600 * 1000;
+    return properties.map((p) => {
+      const propViews = views.filter((v) => v.property_id === p.id);
+      return {
+        property: p,
+        views: Math.max(p.views_count ?? 0, propViews.length),
+        views30: propViews.filter((v) => new Date(v.created_at).getTime() >= since).length,
+        leads: requests.filter((r) => r.property_id === p.id).length,
+      };
+    });
+  }, [properties, views, requests]);
+
   const stats = useMemo(
     () => ({
       total: properties.length,
       published: properties.filter((p) => p.status === "publie").length,
-      requests: requestsQuery.data?.length ?? 0,
+      requests: requests.length,
+      newLeads: requests.filter((r) => r.status === "nouveau").length,
+      views: perProperty.reduce((sum, p) => sum + p.views, 0),
+      portfolio: properties
+        .filter((p) => p.transaction === "vente")
+        .reduce((sum, p) => sum + Number(p.price ?? 0), 0),
+      monthlyRent: properties
+        .filter((p) => p.transaction === "location" && p.status === "publie")
+        .reduce((sum, p) => sum + Number(p.price ?? 0), 0),
     }),
-    [properties, requestsQuery.data],
+    [properties, requests, perProperty],
   );
+
 
   async function signOut() {
     await queryClient.cancelQueries();
@@ -212,16 +280,38 @@ function Dashboard() {
           Tableau de bord vendeur
         </h1>
 
-        <div className="mt-6 grid gap-4 sm:grid-cols-3">
+        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {[
-            { label: "Annonces", value: stats.total, icon: Building2 },
-            { label: "Publiées", value: stats.published, icon: Building2 },
-            { label: "Demandes reçues", value: stats.requests, icon: MessageSquare },
+            {
+              label: "Annonces",
+              value: String(stats.total),
+              hint: `${stats.published} publiée(s)`,
+              icon: Building2,
+            },
+            {
+              label: "Vues cumulées",
+              value: new Intl.NumberFormat("fr-FR").format(stats.views),
+              hint: `${perProperty.reduce((s, p) => s + p.views30, 0)} sur 30 jours`,
+              icon: Eye,
+            },
+            {
+              label: "Leads reçus",
+              value: String(stats.requests),
+              hint: `${stats.newLeads} nouveau(x)`,
+              icon: MessageSquare,
+            },
+            {
+              label: "Portefeuille",
+              value: formatPrice(stats.portfolio),
+              hint: `${formatPrice(stats.monthlyRent)} / mois en location`,
+              icon: Wallet,
+            },
           ].map((s) => (
             <div key={s.label} className="rounded-2xl bg-card p-5 shadow-soft">
               <s.icon className="h-5 w-5 text-gold" />
-              <p className="mt-3 text-2xl font-extrabold text-foreground">{s.value}</p>
+              <p className="mt-3 truncate text-xl font-extrabold text-foreground">{s.value}</p>
               <p className="text-sm text-muted-foreground">{s.label}</p>
+              <p className="mt-1 text-xs text-muted-foreground/80">{s.hint}</p>
             </div>
           ))}
         </div>
@@ -229,7 +319,9 @@ function Dashboard() {
         <Tabs defaultValue="annonces" className="mt-8">
           <TabsList>
             <TabsTrigger value="annonces">Mes annonces</TabsTrigger>
-            <TabsTrigger value="demandes">Demandes</TabsTrigger>
+            <TabsTrigger value="performances">Performances</TabsTrigger>
+            <TabsTrigger value="demandes">Leads</TabsTrigger>
+
           </TabsList>
 
           <TabsContent value="annonces" className="mt-6">
@@ -412,30 +504,120 @@ function Dashboard() {
             </div>
           </TabsContent>
 
+          <TabsContent value="performances" className="mt-6 grid gap-3">
+            {perProperty.length === 0 && (
+              <p className="rounded-2xl bg-card p-6 text-sm text-muted-foreground shadow-soft">
+                Publiez une annonce pour suivre ses performances.
+              </p>
+            )}
+            {perProperty.map(({ property: p, views: v, views30, leads }) => {
+              const max = Math.max(1, ...perProperty.map((x) => x.views));
+              return (
+                <div key={p.id} className="rounded-2xl bg-card p-4 shadow-soft">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <BarChart3 className="h-4 w-4 text-gold" />
+                    <Link
+                      to="/bien/$id"
+                      params={{ id: p.id }}
+                      className="min-w-0 flex-1 truncate font-semibold text-foreground hover:text-gold"
+                    >
+                      {p.title}
+                    </Link>
+                    <Badge variant={p.status === "publie" ? "default" : "secondary"}>
+                      {p.status}
+                    </Badge>
+                  </div>
+                  <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-secondary">
+                    <div
+                      className="h-full rounded-full gold-gradient"
+                      style={{ width: `${Math.round((v / max) * 100)}%` }}
+                    />
+                  </div>
+                  <div className="mt-3 grid grid-cols-3 gap-2 text-sm">
+                    <div>
+                      <p className="font-bold text-foreground">{v}</p>
+                      <p className="text-xs text-muted-foreground">Vues totales</p>
+                    </div>
+                    <div>
+                      <p className="font-bold text-foreground">{views30}</p>
+                      <p className="text-xs text-muted-foreground">30 derniers jours</p>
+                    </div>
+                    <div>
+                      <p className="font-bold text-foreground">{leads}</p>
+                      <p className="text-xs text-muted-foreground">Leads générés</p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </TabsContent>
+
           <TabsContent value="demandes" className="mt-6 grid gap-3">
             {requestsQuery.isLoading && <p className="text-sm text-muted-foreground">Chargement…</p>}
-            {!requestsQuery.isLoading && (requestsQuery.data?.length ?? 0) === 0 && (
+            {!requestsQuery.isLoading && requests.length === 0 && (
               <p className="rounded-2xl bg-card p-6 text-sm text-muted-foreground shadow-soft">
                 Aucune demande reçue pour le moment.
               </p>
             )}
-            {requestsQuery.data?.map((r) => (
-              <div key={r.id} className="rounded-2xl bg-card p-4 shadow-soft">
-                <div className="flex flex-wrap items-center gap-2">
-                  <p className="font-semibold text-foreground">{r.full_name}</p>
-                  <Badge variant="secondary">{r.status}</Badge>
-                  <span className="ml-auto text-xs text-muted-foreground">
-                    {new Date(r.created_at).toLocaleDateString("fr-FR")}
-                  </span>
+            {requests.map((r) => {
+              const related = properties.find((p) => p.id === r.property_id);
+              return (
+                <div key={r.id} className="rounded-2xl bg-card p-4 shadow-soft">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <p className="font-semibold text-foreground">{r.full_name}</p>
+                    <Badge
+                      variant={
+                        r.status === "nouveau"
+                          ? "default"
+                          : r.status === "en_cours"
+                            ? "outline"
+                            : "secondary"
+                      }
+                    >
+                      {r.status}
+                    </Badge>
+                    <span className="ml-auto text-xs text-muted-foreground">
+                      {new Date(r.created_at).toLocaleDateString("fr-FR")}
+                    </span>
+                  </div>
+                  {related && (
+                    <p className="mt-1 text-xs text-muted-foreground">Bien : {related.title}</p>
+                  )}
+                  <p className="mt-2 text-sm text-foreground">{r.message}</p>
+                  <div className="mt-3 flex flex-wrap items-center gap-2">
+                    <Button asChild size="sm" variant="outline" className="rounded-full">
+                      <a href={`mailto:${r.email}`}>
+                        <Mail className="mr-1 h-4 w-4" /> {r.email}
+                      </a>
+                    </Button>
+                    {r.phone && (
+                      <Button asChild size="sm" variant="outline" className="rounded-full">
+                        <a href={`tel:${r.phone}`}>
+                          <Phone className="mr-1 h-4 w-4" /> {r.phone}
+                        </a>
+                      </Button>
+                    )}
+                    <Select
+                      value={r.status}
+                      onValueChange={(v) =>
+                        requestStatusMutation.mutate({ id: r.id, status: v as RequestStatus })
+                      }
+                    >
+                      <SelectTrigger className="ml-auto w-[160px]">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="nouveau">Nouveau</SelectItem>
+                        <SelectItem value="en_cours">En cours</SelectItem>
+                        <SelectItem value="traite">Traité</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  {r.email}
-                  {r.phone ? ` · ${r.phone}` : ""}
-                </p>
-                <p className="mt-2 text-sm text-foreground">{r.message}</p>
-              </div>
-            ))}
+              );
+            })}
           </TabsContent>
+
         </Tabs>
       </div>
     </main>
