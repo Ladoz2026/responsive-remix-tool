@@ -12,7 +12,6 @@ interface SitemapEntry {
 const staticEntries: SitemapEntry[] = [
   { path: "/", changefreq: "daily", priority: "1.0" },
   { path: "/recherche", changefreq: "daily", priority: "0.9" },
-  { path: "/auth", changefreq: "monthly", priority: "0.3" },
 ];
 
 async function fetchPublishedProperties(): Promise<string[]> {
