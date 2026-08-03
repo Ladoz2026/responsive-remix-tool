@@ -216,14 +216,39 @@ function Dashboard() {
   });
 
   const properties = propertiesQuery.data ?? [];
+  const requests = requestsQuery.data ?? [];
+  const views = viewsQuery.data ?? [];
+
+  const perProperty = useMemo(() => {
+    const since = Date.now() - 30 * 24 * 3600 * 1000;
+    return properties.map((p) => {
+      const propViews = views.filter((v) => v.property_id === p.id);
+      return {
+        property: p,
+        views: Math.max(p.views_count ?? 0, propViews.length),
+        views30: propViews.filter((v) => new Date(v.created_at).getTime() >= since).length,
+        leads: requests.filter((r) => r.property_id === p.id).length,
+      };
+    });
+  }, [properties, views, requests]);
+
   const stats = useMemo(
     () => ({
       total: properties.length,
       published: properties.filter((p) => p.status === "publie").length,
-      requests: requestsQuery.data?.length ?? 0,
+      requests: requests.length,
+      newLeads: requests.filter((r) => r.status === "nouveau").length,
+      views: perProperty.reduce((sum, p) => sum + p.views, 0),
+      portfolio: properties
+        .filter((p) => p.transaction === "vente")
+        .reduce((sum, p) => sum + Number(p.price ?? 0), 0),
+      monthlyRent: properties
+        .filter((p) => p.transaction === "location" && p.status === "publie")
+        .reduce((sum, p) => sum + Number(p.price ?? 0), 0),
     }),
-    [properties, requestsQuery.data],
+    [properties, requests, perProperty],
   );
+
 
   async function signOut() {
     await queryClient.cancelQueries();
