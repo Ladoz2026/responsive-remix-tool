@@ -17,6 +17,7 @@ import { Route as RechercheRouteImport } from './routes/recherche'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedFavorisRouteImport } from './routes/_authenticated/favoris'
+import { Route as AuthenticatedMessagesRouteImport } from './routes/_authenticated/messages'
 import { Route as BienIdRouteImport } from './routes/bien.$id'
 
 const IndexRoute = IndexRouteImport.update({
@@ -58,6 +59,11 @@ const AuthenticatedFavorisRoute = AuthenticatedFavorisRouteImport.update({
   path: '/favoris',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedMessagesRoute = AuthenticatedMessagesRouteImport.update({
+  id: '/messages',
+  path: '/messages',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const BienIdRoute = BienIdRouteImport.update({
   id: '/bien/$id',
   path: '/bien/$id',
@@ -72,6 +78,7 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/favoris': typeof AuthenticatedFavorisRoute
+  '/messages': typeof AuthenticatedMessagesRoute
   '/bien/$id': typeof BienIdRoute
 }
 export interface FileRoutesByTo {
@@ -82,6 +89,7 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/favoris': typeof AuthenticatedFavorisRoute
+  '/messages': typeof AuthenticatedMessagesRoute
   '/bien/$id': typeof BienIdRoute
 }
 export interface FileRoutesById {
@@ -94,6 +102,7 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/favoris': typeof AuthenticatedFavorisRoute
+  '/_authenticated/messages': typeof AuthenticatedMessagesRoute
   '/bien/$id': typeof BienIdRoute
 }
 export interface FileRouteTypes {
@@ -106,6 +115,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/dashboard'
     | '/favoris'
+    | '/messages'
     | '/bien/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -116,6 +126,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/dashboard'
     | '/favoris'
+    | '/messages'
     | '/bien/$id'
   id:
     | '__root__'
@@ -127,6 +138,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/_authenticated/dashboard'
     | '/_authenticated/favoris'
+    | '/_authenticated/messages'
     | '/bien/$id'
   fileRoutesById: FileRoutesById
 }
@@ -198,6 +210,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedFavorisRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/messages': {
+      id: '/_authenticated/messages'
+      path: '/messages'
+      fullPath: '/messages'
+      preLoaderRoute: typeof AuthenticatedMessagesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/bien/$id': {
       id: '/bien/$id'
       path: '/bien/$id'
@@ -211,11 +230,13 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedFavorisRoute: typeof AuthenticatedFavorisRoute
+  AuthenticatedMessagesRoute: typeof AuthenticatedMessagesRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedFavorisRoute: AuthenticatedFavorisRoute,
+  AuthenticatedMessagesRoute: AuthenticatedMessagesRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
@@ -233,13 +254,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
