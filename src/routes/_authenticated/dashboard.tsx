@@ -280,16 +280,38 @@ function Dashboard() {
           Tableau de bord vendeur
         </h1>
 
-        <div className="mt-6 grid gap-4 sm:grid-cols-3">
+        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {[
-            { label: "Annonces", value: stats.total, icon: Building2 },
-            { label: "Publiées", value: stats.published, icon: Building2 },
-            { label: "Demandes reçues", value: stats.requests, icon: MessageSquare },
+            {
+              label: "Annonces",
+              value: String(stats.total),
+              hint: `${stats.published} publiée(s)`,
+              icon: Building2,
+            },
+            {
+              label: "Vues cumulées",
+              value: new Intl.NumberFormat("fr-FR").format(stats.views),
+              hint: `${perProperty.reduce((s, p) => s + p.views30, 0)} sur 30 jours`,
+              icon: Eye,
+            },
+            {
+              label: "Leads reçus",
+              value: String(stats.requests),
+              hint: `${stats.newLeads} nouveau(x)`,
+              icon: MessageSquare,
+            },
+            {
+              label: "Portefeuille",
+              value: formatPrice(stats.portfolio),
+              hint: `${formatPrice(stats.monthlyRent)} / mois en location`,
+              icon: Wallet,
+            },
           ].map((s) => (
             <div key={s.label} className="rounded-2xl bg-card p-5 shadow-soft">
               <s.icon className="h-5 w-5 text-gold" />
-              <p className="mt-3 text-2xl font-extrabold text-foreground">{s.value}</p>
+              <p className="mt-3 truncate text-xl font-extrabold text-foreground">{s.value}</p>
               <p className="text-sm text-muted-foreground">{s.label}</p>
+              <p className="mt-1 text-xs text-muted-foreground/80">{s.hint}</p>
             </div>
           ))}
         </div>
@@ -297,7 +319,9 @@ function Dashboard() {
         <Tabs defaultValue="annonces" className="mt-8">
           <TabsList>
             <TabsTrigger value="annonces">Mes annonces</TabsTrigger>
-            <TabsTrigger value="demandes">Demandes</TabsTrigger>
+            <TabsTrigger value="performances">Performances</TabsTrigger>
+            <TabsTrigger value="demandes">Leads</TabsTrigger>
+
           </TabsList>
 
           <TabsContent value="annonces" className="mt-6">
