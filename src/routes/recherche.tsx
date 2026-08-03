@@ -78,7 +78,9 @@ const amenityOptions = [
 const propertyTypes = ["appartement", "villa", "maison", "bureau", "terrain", "commerce"] as const;
 
 function SearchPage() {
+  const { user } = useAuth();
   const [draft, setDraft] = useState<Filters>(emptyFilters);
+
   const [filters, setFilters] = useState<Filters>(emptyFilters);
   const [panelOpen, setPanelOpen] = useState(false);
 
