@@ -130,6 +130,33 @@ function Dashboard() {
     },
   });
 
+  const viewsQuery = useQuery({
+    queryKey: ["my-views", userId],
+    enabled: !!userId,
+    queryFn: async (): Promise<{ property_id: string; created_at: string }[]> => {
+      const { data, error } = await supabase
+        .from("property_views")
+        .select("property_id, created_at")
+        .order("created_at", { ascending: false })
+        .limit(5000);
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
+
+  const requestStatusMutation = useMutation({
+    mutationFn: async ({ id, status }: { id: string; status: RequestStatus }) => {
+      const { error } = await supabase.from("contact_requests").update({ status }).eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success("Statut du lead mis à jour");
+      queryClient.invalidateQueries({ queryKey: ["my-requests"] });
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+
   const createMutation = useMutation({
     mutationFn: async () => {
       const parsed = propertySchema.safeParse({
