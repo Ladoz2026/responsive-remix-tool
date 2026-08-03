@@ -13,6 +13,7 @@ import { lovable } from "@/integrations/lovable/index";
 export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
+      { name: "robots", content: "noindex, nofollow" },
       { title: "Connexion espace vendeur | SeLoger CI" },
       {
         name: "description",

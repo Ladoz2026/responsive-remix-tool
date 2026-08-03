@@ -228,7 +228,9 @@ function PropertyDetail() {
               <img
                 src={images[activeImage] ?? images[0]!}
                 alt={property.title}
-                className="h-[420px] w-full object-cover"
+                loading="eager"
+                fetchPriority="high"
+                className="h-[420px]" w-full object-cover"
               />
               {images.length > 1 && (
                 <div className="flex gap-3 overflow-x-auto p-4">

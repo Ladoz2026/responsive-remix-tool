@@ -45,6 +45,7 @@ type ContactRequest = Database["public"]["Tables"]["contact_requests"]["Row"];
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
     meta: [
+      { name: "robots", content: "noindex, nofollow" },
       { title: "Tableau de bord vendeur | SeLoger CI" },
       {
         name: "description",

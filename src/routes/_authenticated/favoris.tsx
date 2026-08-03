@@ -10,6 +10,7 @@ import { useAuth } from "@/hooks/useAuth";
 export const Route = createFileRoute("/_authenticated/favoris")({
   head: () => ({
     meta: [
+      { name: "robots", content: "noindex, nofollow" },
       { title: "Mes biens favoris | SeLoger CI" },
       {
         name: "description",
