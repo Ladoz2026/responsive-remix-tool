@@ -59,6 +59,110 @@ export type Database = {
         }
         Relationships: []
       }
+      categories: {
+        Row: {
+          created_at: string
+          icon: string | null
+          id: string
+          name: string
+          slug: string
+          sort_order: number
+        }
+        Insert: {
+          created_at?: string
+          icon?: string | null
+          id?: string
+          name: string
+          slug: string
+          sort_order?: number
+        }
+        Update: {
+          created_at?: string
+          icon?: string | null
+          id?: string
+          name?: string
+          slug?: string
+          sort_order?: number
+        }
+        Relationships: []
+      }
+      cities: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          slug: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          slug: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          slug?: string
+        }
+        Relationships: []
+      }
+      communes: {
+        Row: {
+          city_id: string
+          created_at: string
+          id: string
+          name: string
+          slug: string
+        }
+        Insert: {
+          city_id: string
+          created_at?: string
+          id?: string
+          name: string
+          slug: string
+        }
+        Update: {
+          city_id?: string
+          created_at?: string
+          id?: string
+          name?: string
+          slug?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "communes_city_id_fkey"
+            columns: ["city_id"]
+            isOneToOne: false
+            referencedRelation: "cities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      comparisons: {
+        Row: {
+          created_at: string
+          id: string
+          property_ids: string[]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          property_ids?: string[]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          property_ids?: string[]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       contact_requests: {
         Row: {
           created_at: string
@@ -100,6 +204,223 @@ export type Database = {
           },
         ]
       }
+      conversations: {
+        Row: {
+          created_at: string
+          id: string
+          last_message_at: string
+          participant_a: string
+          participant_b: string
+          property_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          last_message_at?: string
+          participant_a: string
+          participant_b: string
+          property_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          last_message_at?: string
+          participant_a?: string
+          participant_b?: string
+          property_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conversations_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      districts: {
+        Row: {
+          commune_id: string
+          created_at: string
+          id: string
+          name: string
+          slug: string
+        }
+        Insert: {
+          commune_id: string
+          created_at?: string
+          id?: string
+          name: string
+          slug: string
+        }
+        Update: {
+          commune_id?: string
+          created_at?: string
+          id?: string
+          name?: string
+          slug?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "districts_commune_id_fkey"
+            columns: ["commune_id"]
+            isOneToOne: false
+            referencedRelation: "communes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      favorites: {
+        Row: {
+          created_at: string
+          id: string
+          property_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          property_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          property_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "favorites_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      messages: {
+        Row: {
+          body: string
+          conversation_id: string
+          created_at: string
+          id: string
+          is_read: boolean
+          sender_id: string
+        }
+        Insert: {
+          body: string
+          conversation_id: string
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          sender_id: string
+        }
+        Update: {
+          body?: string
+          conversation_id?: string
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          sender_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notifications: {
+        Row: {
+          body: string | null
+          created_at: string
+          id: string
+          is_read: boolean
+          link: string | null
+          title: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          link?: string | null
+          title: string
+          type?: string
+          user_id: string
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          link?: string | null
+          title?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      payments: {
+        Row: {
+          amount: number
+          created_at: string
+          currency: string
+          description: string | null
+          id: string
+          invoice_url: string | null
+          property_id: string | null
+          provider: string
+          provider_reference: string | null
+          status: Database["public"]["Enums"]["payment_status"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount?: number
+          created_at?: string
+          currency?: string
+          description?: string | null
+          id?: string
+          invoice_url?: string | null
+          property_id?: string | null
+          provider?: string
+          provider_reference?: string | null
+          status?: Database["public"]["Enums"]["payment_status"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          currency?: string
+          description?: string | null
+          id?: string
+          invoice_url?: string | null
+          property_id?: string | null
+          provider?: string
+          provider_reference?: string | null
+          status?: Database["public"]["Enums"]["payment_status"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payments_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -133,75 +454,320 @@ export type Database = {
       properties: {
         Row: {
           address: string | null
+          agent_id: string | null
           amenities: string[]
           bathrooms: number
           bedrooms: number
+          category_id: string | null
           city: string
+          city_id: string | null
+          commune_id: string | null
           created_at: string
           currency: string
           description: string | null
           district: string | null
+          district_id: string | null
+          documents: string[]
+          expires_at: string | null
+          has_ac: boolean
+          has_garage: boolean
+          has_garden: boolean
+          has_kitchen: boolean
+          has_pool: boolean
           id: string
           images: string[]
           is_featured: boolean
+          is_furnished: boolean
           is_verified: boolean
+          latitude: number | null
+          longitude: number | null
           owner_id: string
           price: number
           property_type: Database["public"]["Enums"]["property_type"]
+          published_at: string | null
+          rejection_reason: string | null
+          slug: string | null
           status: Database["public"]["Enums"]["listing_status"]
           surface_m2: number | null
           title: string
           transaction: Database["public"]["Enums"]["transaction_type"]
           updated_at: string
+          video_url: string | null
           views_count: number
+          virtual_tour_url: string | null
         }
         Insert: {
           address?: string | null
+          agent_id?: string | null
           amenities?: string[]
           bathrooms?: number
           bedrooms?: number
+          category_id?: string | null
           city?: string
+          city_id?: string | null
+          commune_id?: string | null
           created_at?: string
           currency?: string
           description?: string | null
           district?: string | null
+          district_id?: string | null
+          documents?: string[]
+          expires_at?: string | null
+          has_ac?: boolean
+          has_garage?: boolean
+          has_garden?: boolean
+          has_kitchen?: boolean
+          has_pool?: boolean
           id?: string
           images?: string[]
           is_featured?: boolean
+          is_furnished?: boolean
           is_verified?: boolean
+          latitude?: number | null
+          longitude?: number | null
           owner_id: string
           price?: number
           property_type?: Database["public"]["Enums"]["property_type"]
+          published_at?: string | null
+          rejection_reason?: string | null
+          slug?: string | null
           status?: Database["public"]["Enums"]["listing_status"]
           surface_m2?: number | null
           title: string
           transaction?: Database["public"]["Enums"]["transaction_type"]
           updated_at?: string
+          video_url?: string | null
           views_count?: number
+          virtual_tour_url?: string | null
         }
         Update: {
           address?: string | null
+          agent_id?: string | null
           amenities?: string[]
           bathrooms?: number
           bedrooms?: number
+          category_id?: string | null
           city?: string
+          city_id?: string | null
+          commune_id?: string | null
           created_at?: string
           currency?: string
           description?: string | null
           district?: string | null
+          district_id?: string | null
+          documents?: string[]
+          expires_at?: string | null
+          has_ac?: boolean
+          has_garage?: boolean
+          has_garden?: boolean
+          has_kitchen?: boolean
+          has_pool?: boolean
           id?: string
           images?: string[]
           is_featured?: boolean
+          is_furnished?: boolean
           is_verified?: boolean
+          latitude?: number | null
+          longitude?: number | null
           owner_id?: string
           price?: number
           property_type?: Database["public"]["Enums"]["property_type"]
+          published_at?: string | null
+          rejection_reason?: string | null
+          slug?: string | null
           status?: Database["public"]["Enums"]["listing_status"]
           surface_m2?: number | null
           title?: string
           transaction?: Database["public"]["Enums"]["transaction_type"]
           updated_at?: string
+          video_url?: string | null
           views_count?: number
+          virtual_tour_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "properties_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "properties_city_id_fkey"
+            columns: ["city_id"]
+            isOneToOne: false
+            referencedRelation: "cities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "properties_commune_id_fkey"
+            columns: ["commune_id"]
+            isOneToOne: false
+            referencedRelation: "communes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "properties_district_id_fkey"
+            columns: ["district_id"]
+            isOneToOne: false
+            referencedRelation: "districts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      property_images: {
+        Row: {
+          alt: string | null
+          created_at: string
+          id: string
+          property_id: string
+          sort_order: number
+          url: string
+        }
+        Insert: {
+          alt?: string | null
+          created_at?: string
+          id?: string
+          property_id: string
+          sort_order?: number
+          url: string
+        }
+        Update: {
+          alt?: string | null
+          created_at?: string
+          id?: string
+          property_id?: string
+          sort_order?: number
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "property_images_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      property_views: {
+        Row: {
+          created_at: string
+          id: string
+          property_id: string
+          viewer_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          property_id: string
+          viewer_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          property_id?: string
+          viewer_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "property_views_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      reviews: {
+        Row: {
+          author_id: string
+          comment: string | null
+          created_at: string
+          id: string
+          property_id: string | null
+          rating: number
+          target_user_id: string | null
+        }
+        Insert: {
+          author_id: string
+          comment?: string | null
+          created_at?: string
+          id?: string
+          property_id?: string | null
+          rating?: number
+          target_user_id?: string | null
+        }
+        Update: {
+          author_id?: string
+          comment?: string | null
+          created_at?: string
+          id?: string
+          property_id?: string | null
+          rating?: number
+          target_user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reviews_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      settings: {
+        Row: {
+          key: string
+          updated_at: string
+          value: Json
+        }
+        Insert: {
+          key: string
+          updated_at?: string
+          value?: Json
+        }
+        Update: {
+          key?: string
+          updated_at?: string
+          value?: Json
+        }
+        Relationships: []
+      }
+      subscriptions: {
+        Row: {
+          created_at: string
+          current_period_end: string | null
+          id: string
+          plan: string
+          provider: string
+          provider_reference: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          current_period_end?: string | null
+          id?: string
+          plan?: string
+          provider?: string
+          provider_reference?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          current_period_end?: string | null
+          id?: string
+          plan?: string
+          provider?: string
+          provider_reference?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -249,6 +815,7 @@ export type Database = {
         | "attente_paiement"
         | "refuse"
         | "expire"
+      payment_status: "en_attente" | "paye" | "echoue" | "rembourse"
       property_type:
         | "appartement"
         | "villa"
@@ -395,6 +962,7 @@ export const Constants = {
         "refuse",
         "expire",
       ],
+      payment_status: ["en_attente", "paye", "echoue", "rembourse"],
       property_type: [
         "appartement",
         "villa",
