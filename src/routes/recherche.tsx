@@ -29,7 +29,9 @@ export const Route = createFileRoute("/recherche")({
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:url", content: "https://seloger-ci.poroinfo.net/recherche" },
     ],
+    links: [{ rel: "canonical", href: "https://seloger-ci.poroinfo.net/recherche" }],
   }),
   component: SearchPage,
 });
