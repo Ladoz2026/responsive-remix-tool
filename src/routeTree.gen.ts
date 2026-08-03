@@ -16,6 +16,7 @@ import { Route as MotDePasseOublieRouteImport } from './routes/mot-de-passe-oubl
 import { Route as RechercheRouteImport } from './routes/recherche'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as AuthenticatedAlertesRouteImport } from './routes/_authenticated/alertes'
 import { Route as AuthenticatedCrmRouteImport } from './routes/_authenticated/crm'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedFavorisRouteImport } from './routes/_authenticated/favoris'
@@ -56,6 +57,11 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedAlertesRoute = AuthenticatedAlertesRouteImport.update({
+  id: '/alertes',
+  path: '/alertes',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedCrmRoute = AuthenticatedCrmRouteImport.update({
   id: '/crm',
   path: '/crm',
@@ -89,6 +95,7 @@ export interface FileRoutesByFullPath {
   '/recherche': typeof RechercheRoute
   '/reset-password': typeof ResetPasswordRoute
   '/admin': typeof AuthenticatedAdminRoute
+  '/alertes': typeof AuthenticatedAlertesRoute
   '/crm': typeof AuthenticatedCrmRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/favoris': typeof AuthenticatedFavorisRoute
@@ -102,6 +109,7 @@ export interface FileRoutesByTo {
   '/recherche': typeof RechercheRoute
   '/reset-password': typeof ResetPasswordRoute
   '/admin': typeof AuthenticatedAdminRoute
+  '/alertes': typeof AuthenticatedAlertesRoute
   '/crm': typeof AuthenticatedCrmRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/favoris': typeof AuthenticatedFavorisRoute
@@ -117,6 +125,7 @@ export interface FileRoutesById {
   '/recherche': typeof RechercheRoute
   '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
+  '/_authenticated/alertes': typeof AuthenticatedAlertesRoute
   '/_authenticated/crm': typeof AuthenticatedCrmRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/favoris': typeof AuthenticatedFavorisRoute
@@ -132,6 +141,7 @@ export interface FileRouteTypes {
     | '/recherche'
     | '/reset-password'
     | '/admin'
+    | '/alertes'
     | '/crm'
     | '/dashboard'
     | '/favoris'
@@ -145,6 +155,7 @@ export interface FileRouteTypes {
     | '/recherche'
     | '/reset-password'
     | '/admin'
+    | '/alertes'
     | '/crm'
     | '/dashboard'
     | '/favoris'
@@ -159,6 +170,7 @@ export interface FileRouteTypes {
     | '/recherche'
     | '/reset-password'
     | '/_authenticated/admin'
+    | '/_authenticated/alertes'
     | '/_authenticated/crm'
     | '/_authenticated/dashboard'
     | '/_authenticated/favoris'
@@ -227,6 +239,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/alertes': {
+      id: '/_authenticated/alertes'
+      path: '/alertes'
+      fullPath: '/alertes'
+      preLoaderRoute: typeof AuthenticatedAlertesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/crm': {
       id: '/_authenticated/crm'
       path: '/crm'
@@ -267,6 +286,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
+  AuthenticatedAlertesRoute: typeof AuthenticatedAlertesRoute
   AuthenticatedCrmRoute: typeof AuthenticatedCrmRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedFavorisRoute: typeof AuthenticatedFavorisRoute
@@ -275,6 +295,7 @@ interface AuthenticatedRouteRouteChildren {
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRoute,
+  AuthenticatedAlertesRoute: AuthenticatedAlertesRoute,
   AuthenticatedCrmRoute: AuthenticatedCrmRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedFavorisRoute: AuthenticatedFavorisRoute,

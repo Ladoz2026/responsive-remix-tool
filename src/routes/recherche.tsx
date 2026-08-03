@@ -195,6 +195,25 @@ function SearchPage() {
             </Button>
           </div>
 
+          <div className="mt-3 flex justify-end">
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="rounded-full"
+              onClick={() => saveAlert.mutate()}
+              disabled={saveAlert.isPending}
+            >
+              {saveAlert.isPending ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <BellRing className="mr-2 h-4 w-4" />
+              )}
+              Créer une alerte avec ces critères
+            </Button>
+          </div>
+
+
           <div
             className={`grid overflow-hidden transition-[grid-template-rows,opacity] duration-400 ease-out ${
               panelOpen ? "mt-5 grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
