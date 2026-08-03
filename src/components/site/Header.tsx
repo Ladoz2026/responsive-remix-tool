@@ -4,6 +4,7 @@ import { Crown, Menu, X } from "lucide-react";
 
 import { useAuth } from "@/hooks/useAuth";
 import { useRoles } from "@/hooks/useRoles";
+import { NotificationsBell } from "@/components/site/NotificationsBell";
 
 const baseLinks = [
   { label: "Acheter", href: "/recherche" },
@@ -73,6 +74,7 @@ export function Header() {
         </nav>
 
         <div className="ml-auto hidden items-center gap-3 lg:flex">
+          <NotificationsBell light={!scrolled} />
           <Link
             to={user ? "/dashboard" : "/auth"}
             className={`text-sm font-medium transition-colors hover:text-gold ${
@@ -89,11 +91,15 @@ export function Header() {
           </Link>
         </div>
 
+        <div className="ml-auto lg:hidden">
+          <NotificationsBell light={!scrolled} />
+        </div>
+
         <button
           type="button"
           aria-label="Ouvrir le menu"
           onClick={() => setOpen((v) => !v)}
-          className={`ml-auto grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-border/40 lg:hidden ${
+          className={`grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-border/40 lg:hidden ${
             scrolled ? "text-foreground" : "text-primary-foreground"
           }`}
         >
