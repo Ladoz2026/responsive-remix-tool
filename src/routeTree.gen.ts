@@ -16,6 +16,7 @@ import { Route as MotDePasseOublieRouteImport } from './routes/mot-de-passe-oubl
 import { Route as RechercheRouteImport } from './routes/recherche'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedFavorisRouteImport } from './routes/_authenticated/favoris'
 import { Route as BienIdRouteImport } from './routes/bien.$id'
 
 const IndexRoute = IndexRouteImport.update({
@@ -52,6 +53,11 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedFavorisRoute = AuthenticatedFavorisRouteImport.update({
+  id: '/favoris',
+  path: '/favoris',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const BienIdRoute = BienIdRouteImport.update({
   id: '/bien/$id',
   path: '/bien/$id',
@@ -65,6 +71,7 @@ export interface FileRoutesByFullPath {
   '/recherche': typeof RechercheRoute
   '/reset-password': typeof ResetPasswordRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/favoris': typeof AuthenticatedFavorisRoute
   '/bien/$id': typeof BienIdRoute
 }
 export interface FileRoutesByTo {
@@ -74,6 +81,7 @@ export interface FileRoutesByTo {
   '/recherche': typeof RechercheRoute
   '/reset-password': typeof ResetPasswordRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/favoris': typeof AuthenticatedFavorisRoute
   '/bien/$id': typeof BienIdRoute
 }
 export interface FileRoutesById {
@@ -85,6 +93,7 @@ export interface FileRoutesById {
   '/recherche': typeof RechercheRoute
   '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/favoris': typeof AuthenticatedFavorisRoute
   '/bien/$id': typeof BienIdRoute
 }
 export interface FileRouteTypes {
@@ -96,6 +105,7 @@ export interface FileRouteTypes {
     | '/recherche'
     | '/reset-password'
     | '/dashboard'
+    | '/favoris'
     | '/bien/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -105,6 +115,7 @@ export interface FileRouteTypes {
     | '/recherche'
     | '/reset-password'
     | '/dashboard'
+    | '/favoris'
     | '/bien/$id'
   id:
     | '__root__'
@@ -115,6 +126,7 @@ export interface FileRouteTypes {
     | '/recherche'
     | '/reset-password'
     | '/_authenticated/dashboard'
+    | '/_authenticated/favoris'
     | '/bien/$id'
   fileRoutesById: FileRoutesById
 }
@@ -179,6 +191,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/favoris': {
+      id: '/_authenticated/favoris'
+      path: '/favoris'
+      fullPath: '/favoris'
+      preLoaderRoute: typeof AuthenticatedFavorisRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/bien/$id': {
       id: '/bien/$id'
       path: '/bien/$id'
@@ -191,10 +210,12 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedFavorisRoute: typeof AuthenticatedFavorisRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedFavorisRoute: AuthenticatedFavorisRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
