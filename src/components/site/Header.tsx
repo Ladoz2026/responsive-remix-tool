@@ -19,8 +19,8 @@ const baseLinks = [
 export function Header() {
   const [open, setOpen] = useState(false);
   const { user } = useAuth();
-  const { isAdmin } = useRoles();
   const { isAdmin, isAgent, isOwner } = useRoles();
+
   const links = [
     ...baseLinks,
     ...(user
