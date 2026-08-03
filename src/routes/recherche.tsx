@@ -126,8 +126,8 @@ function SearchPage() {
         .eq("status", "publie");
 
       if (filters.q) query = query.ilike("title", `%${filters.q}%`);
-      if (filters.transaction) query = query.eq("transaction", filters.transaction);
-      if (filters.propertyType) query = query.eq("property_type", filters.propertyType);
+      if (filters.transaction) query = query.eq("transaction", filters.transaction as "vente" | "location");
+      if (filters.propertyType) query = query.eq("property_type", filters.propertyType as (typeof propertyTypes)[number]);
       if (filters.cityId) query = query.eq("city_id", filters.cityId);
       if (filters.communeId) query = query.eq("commune_id", filters.communeId);
       if (filters.districtId) query = query.eq("district_id", filters.districtId);
@@ -135,7 +135,8 @@ function SearchPage() {
       if (filters.maxPrice) query = query.lte("price", Number(filters.maxPrice));
       if (filters.minSurface) query = query.gte("surface_m2", Number(filters.minSurface));
       if (filters.bedrooms) query = query.gte("bedrooms", Number(filters.bedrooms));
-      for (const amenity of filters.amenities) query = query.eq(amenity, true);
+      for (const amenity of filters.amenities)
+        query = query.eq(amenity as (typeof amenityOptions)[number]["key"], true);
 
       if (filters.sort === "price_asc") query = query.order("price", { ascending: true });
       else if (filters.sort === "price_desc") query = query.order("price", { ascending: false });
