@@ -504,30 +504,120 @@ function Dashboard() {
             </div>
           </TabsContent>
 
+          <TabsContent value="performances" className="mt-6 grid gap-3">
+            {perProperty.length === 0 && (
+              <p className="rounded-2xl bg-card p-6 text-sm text-muted-foreground shadow-soft">
+                Publiez une annonce pour suivre ses performances.
+              </p>
+            )}
+            {perProperty.map(({ property: p, views: v, views30, leads }) => {
+              const max = Math.max(1, ...perProperty.map((x) => x.views));
+              return (
+                <div key={p.id} className="rounded-2xl bg-card p-4 shadow-soft">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <BarChart3 className="h-4 w-4 text-gold" />
+                    <Link
+                      to="/bien/$id"
+                      params={{ id: p.id }}
+                      className="min-w-0 flex-1 truncate font-semibold text-foreground hover:text-gold"
+                    >
+                      {p.title}
+                    </Link>
+                    <Badge variant={p.status === "publie" ? "default" : "secondary"}>
+                      {p.status}
+                    </Badge>
+                  </div>
+                  <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-secondary">
+                    <div
+                      className="h-full rounded-full gold-gradient"
+                      style={{ width: `${Math.round((v / max) * 100)}%` }}
+                    />
+                  </div>
+                  <div className="mt-3 grid grid-cols-3 gap-2 text-sm">
+                    <div>
+                      <p className="font-bold text-foreground">{v}</p>
+                      <p className="text-xs text-muted-foreground">Vues totales</p>
+                    </div>
+                    <div>
+                      <p className="font-bold text-foreground">{views30}</p>
+                      <p className="text-xs text-muted-foreground">30 derniers jours</p>
+                    </div>
+                    <div>
+                      <p className="font-bold text-foreground">{leads}</p>
+                      <p className="text-xs text-muted-foreground">Leads générés</p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </TabsContent>
+
           <TabsContent value="demandes" className="mt-6 grid gap-3">
             {requestsQuery.isLoading && <p className="text-sm text-muted-foreground">Chargement…</p>}
-            {!requestsQuery.isLoading && (requestsQuery.data?.length ?? 0) === 0 && (
+            {!requestsQuery.isLoading && requests.length === 0 && (
               <p className="rounded-2xl bg-card p-6 text-sm text-muted-foreground shadow-soft">
                 Aucune demande reçue pour le moment.
               </p>
             )}
-            {requestsQuery.data?.map((r) => (
-              <div key={r.id} className="rounded-2xl bg-card p-4 shadow-soft">
-                <div className="flex flex-wrap items-center gap-2">
-                  <p className="font-semibold text-foreground">{r.full_name}</p>
-                  <Badge variant="secondary">{r.status}</Badge>
-                  <span className="ml-auto text-xs text-muted-foreground">
-                    {new Date(r.created_at).toLocaleDateString("fr-FR")}
-                  </span>
+            {requests.map((r) => {
+              const related = properties.find((p) => p.id === r.property_id);
+              return (
+                <div key={r.id} className="rounded-2xl bg-card p-4 shadow-soft">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <p className="font-semibold text-foreground">{r.full_name}</p>
+                    <Badge
+                      variant={
+                        r.status === "nouveau"
+                          ? "default"
+                          : r.status === "en_cours"
+                            ? "outline"
+                            : "secondary"
+                      }
+                    >
+                      {r.status}
+                    </Badge>
+                    <span className="ml-auto text-xs text-muted-foreground">
+                      {new Date(r.created_at).toLocaleDateString("fr-FR")}
+                    </span>
+                  </div>
+                  {related && (
+                    <p className="mt-1 text-xs text-muted-foreground">Bien : {related.title}</p>
+                  )}
+                  <p className="mt-2 text-sm text-foreground">{r.message}</p>
+                  <div className="mt-3 flex flex-wrap items-center gap-2">
+                    <Button asChild size="sm" variant="outline" className="rounded-full">
+                      <a href={`mailto:${r.email}`}>
+                        <Mail className="mr-1 h-4 w-4" /> {r.email}
+                      </a>
+                    </Button>
+                    {r.phone && (
+                      <Button asChild size="sm" variant="outline" className="rounded-full">
+                        <a href={`tel:${r.phone}`}>
+                          <Phone className="mr-1 h-4 w-4" /> {r.phone}
+                        </a>
+                      </Button>
+                    )}
+                    <Select
+                      value={r.status}
+                      onValueChange={(v) =>
+                        requestStatusMutation.mutate({ id: r.id, status: v as RequestStatus })
+                      }
+                    >
+                      <SelectTrigger className="ml-auto w-[160px]">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="nouveau">Nouveau</SelectItem>
+                        <SelectItem value="en_cours">En cours</SelectItem>
+                        <SelectItem value="traite">Traité</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  {r.email}
-                  {r.phone ? ` · ${r.phone}` : ""}
-                </p>
-                <p className="mt-2 text-sm text-foreground">{r.message}</p>
-              </div>
-            ))}
+              );
+            })}
           </TabsContent>
+
         </Tabs>
       </div>
     </main>
