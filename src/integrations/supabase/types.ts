@@ -165,32 +165,44 @@ export type Database = {
       }
       contact_requests: {
         Row: {
+          assigned_to: string | null
           created_at: string
           email: string
+          follow_up_at: string | null
           full_name: string
           id: string
+          last_contacted_at: string | null
           message: string
           phone: string | null
+          priority: Database["public"]["Enums"]["lead_priority"]
           property_id: string | null
           status: Database["public"]["Enums"]["request_status"]
         }
         Insert: {
+          assigned_to?: string | null
           created_at?: string
           email: string
+          follow_up_at?: string | null
           full_name: string
           id?: string
+          last_contacted_at?: string | null
           message: string
           phone?: string | null
+          priority?: Database["public"]["Enums"]["lead_priority"]
           property_id?: string | null
           status?: Database["public"]["Enums"]["request_status"]
         }
         Update: {
+          assigned_to?: string | null
           created_at?: string
           email?: string
+          follow_up_at?: string | null
           full_name?: string
           id?: string
+          last_contacted_at?: string | null
           message?: string
           phone?: string | null
+          priority?: Database["public"]["Enums"]["lead_priority"]
           property_id?: string | null
           status?: Database["public"]["Enums"]["request_status"]
         }
@@ -296,6 +308,41 @@ export type Database = {
             columns: ["property_id"]
             isOneToOne: false
             referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lead_notes: {
+        Row: {
+          author_id: string
+          body: string
+          created_at: string
+          id: string
+          request_id: string
+          updated_at: string
+        }
+        Insert: {
+          author_id: string
+          body: string
+          created_at?: string
+          id?: string
+          request_id: string
+          updated_at?: string
+        }
+        Update: {
+          author_id?: string
+          body?: string
+          created_at?: string
+          id?: string
+          request_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lead_notes_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "contact_requests"
             referencedColumns: ["id"]
           },
         ]
@@ -797,6 +844,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      can_manage_lead: {
+        Args: { _request_id: string; _user_id: string }
+        Returns: boolean
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -807,6 +858,7 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "agent" | "user" | "proprietaire" | "visiteur"
+      lead_priority: "basse" | "normale" | "haute"
       listing_status:
         | "brouillon"
         | "en_revue"
@@ -953,6 +1005,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "agent", "user", "proprietaire", "visiteur"],
+      lead_priority: ["basse", "normale", "haute"],
       listing_status: [
         "brouillon",
         "en_revue",
