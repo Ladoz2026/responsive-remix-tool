@@ -31,7 +31,7 @@ export const Route = createFileRoute("/_authenticated/newsletter")({
 });
 
 function NewsletterAdmin() {
-  const { isAdmin, isLoading: rolesLoading } = useRoles();
+  const { isAdmin, loading: rolesLoading } = useRoles();
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
   const [title, setTitle] = useState("");

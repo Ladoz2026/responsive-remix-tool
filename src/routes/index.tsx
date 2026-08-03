@@ -8,6 +8,7 @@ import { Validation } from "@/components/site/Validation";
 import { Testimonials } from "@/components/site/Testimonials";
 import { Magazine } from "@/components/site/Magazine";
 import { CtaFooter } from "@/components/site/CtaFooter";
+import { NewsletterSignup } from "@/components/site/NewsletterSignup";
 
 const title = "SeLogerCI — Immobilier premium en Côte d'Ivoire";
 const description =
@@ -58,7 +59,8 @@ function Index() {
         <Validation />
         <Testimonials />
         <Magazine />
-        <CtaFooter />
+        <NewsletterSignup />
+      <CtaFooter />
       </main>
     </div>
   );

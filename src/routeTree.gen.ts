@@ -22,6 +22,7 @@ import { Route as AuthenticatedCrmRouteImport } from './routes/_authenticated/cr
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedFavorisRouteImport } from './routes/_authenticated/favoris'
 import { Route as AuthenticatedMessagesRouteImport } from './routes/_authenticated/messages'
+import { Route as AuthenticatedNewsletterRouteImport } from './routes/_authenticated/newsletter'
 import { Route as BienIdRouteImport } from './routes/bien.$id'
 
 const IndexRoute = IndexRouteImport.update({
@@ -88,6 +89,11 @@ const AuthenticatedMessagesRoute = AuthenticatedMessagesRouteImport.update({
   path: '/messages',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedNewsletterRoute = AuthenticatedNewsletterRouteImport.update({
+  id: '/newsletter',
+  path: '/newsletter',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const BienIdRoute = BienIdRouteImport.update({
   id: '/bien/$id',
   path: '/bien/$id',
@@ -107,6 +113,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/favoris': typeof AuthenticatedFavorisRoute
   '/messages': typeof AuthenticatedMessagesRoute
+  '/newsletter': typeof AuthenticatedNewsletterRoute
   '/bien/$id': typeof BienIdRoute
 }
 export interface FileRoutesByTo {
@@ -122,6 +129,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/favoris': typeof AuthenticatedFavorisRoute
   '/messages': typeof AuthenticatedMessagesRoute
+  '/newsletter': typeof AuthenticatedNewsletterRoute
   '/bien/$id': typeof BienIdRoute
 }
 export interface FileRoutesById {
@@ -139,6 +147,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/favoris': typeof AuthenticatedFavorisRoute
   '/_authenticated/messages': typeof AuthenticatedMessagesRoute
+  '/_authenticated/newsletter': typeof AuthenticatedNewsletterRoute
   '/bien/$id': typeof BienIdRoute
 }
 export interface FileRouteTypes {
@@ -156,6 +165,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/favoris'
     | '/messages'
+    | '/newsletter'
     | '/bien/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -171,6 +181,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/favoris'
     | '/messages'
+    | '/newsletter'
     | '/bien/$id'
   id:
     | '__root__'
@@ -187,6 +198,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard'
     | '/_authenticated/favoris'
     | '/_authenticated/messages'
+    | '/_authenticated/newsletter'
     | '/bien/$id'
   fileRoutesById: FileRoutesById
 }
@@ -294,6 +306,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedMessagesRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/newsletter': {
+      id: '/_authenticated/newsletter'
+      path: '/newsletter'
+      fullPath: '/newsletter'
+      preLoaderRoute: typeof AuthenticatedNewsletterRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/bien/$id': {
       id: '/bien/$id'
       path: '/bien/$id'
@@ -311,6 +330,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedFavorisRoute: typeof AuthenticatedFavorisRoute
   AuthenticatedMessagesRoute: typeof AuthenticatedMessagesRoute
+  AuthenticatedNewsletterRoute: typeof AuthenticatedNewsletterRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -320,6 +340,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedFavorisRoute: AuthenticatedFavorisRoute,
   AuthenticatedMessagesRoute: AuthenticatedMessagesRoute,
+  AuthenticatedNewsletterRoute: AuthenticatedNewsletterRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
