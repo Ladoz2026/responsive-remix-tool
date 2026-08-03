@@ -33,6 +33,7 @@ export function Header() {
       : []),
     ...(user && (isAdmin || isAgent || isOwner) ? [{ label: "CRM", href: "/crm" }] : []),
     ...(isAdmin ? [{ label: "Admin", href: "/admin" }] : []),
+    ...(isAdmin ? [{ label: "Newsletter", href: "/newsletter" }] : []),
   ];
 
   const [scrolled, setScrolled] = useState(false);
