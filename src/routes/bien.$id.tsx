@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import {
   BadgeCheck,
@@ -63,6 +63,8 @@ const amenityLabels: Record<string, string> = {
 function PropertyDetail() {
   const { id } = Route.useParams();
   const { user } = useAuth();
+  const navigate = useNavigate();
+  const [startingChat, setStartingChat] = useState(false);
   const [activeImage, setActiveImage] = useState(0);
   const [sending, setSending] = useState(false);
   const [form, setForm] = useState({ full_name: "", email: "", phone: "", message: "" });
@@ -88,6 +90,38 @@ function PropertyDetail() {
       viewer_id: user?.id ?? null,
     });
   }, [property, user?.id]);
+
+  async function startConversation(ownerId: string) {
+    if (!user) {
+      toast.error("Connectez-vous pour discuter avec le vendeur.");
+      return;
+    }
+    if (user.id === ownerId) {
+      toast.error("Vous êtes le propriétaire de ce bien.");
+      return;
+    }
+    setStartingChat(true);
+    const { data: existing } = await supabase
+      .from("conversations")
+      .select("id")
+      .eq("property_id", id)
+      .or(`participant_a.eq.${user.id},participant_b.eq.${user.id}`)
+      .maybeSingle();
+    if (!existing) {
+      const { error } = await supabase.from("conversations").insert({
+        property_id: id,
+        participant_a: user.id,
+        participant_b: ownerId,
+      });
+      if (error) {
+        setStartingChat(false);
+        toast.error("Impossible de démarrer la discussion.");
+        return;
+      }
+    }
+    setStartingChat(false);
+    navigate({ to: "/messages" });
+  }
 
   async function handleContact(e: React.FormEvent) {
     e.preventDefault();
@@ -334,6 +368,16 @@ function PropertyDetail() {
               <Button type="submit" disabled={sending} className="rounded-full">
                 {sending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Envoyer ma demande
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                disabled={startingChat}
+                className="rounded-full"
+                onClick={() => startConversation(property.owner_id)}
+              >
+                {startingChat && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Discuter en direct
               </Button>
             </form>
           </aside>
