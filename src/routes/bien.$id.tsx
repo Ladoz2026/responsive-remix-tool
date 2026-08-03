@@ -230,7 +230,7 @@ function PropertyDetail() {
                 alt={property.title}
                 loading="eager"
                 fetchPriority="high"
-                className="h-[420px]" w-full object-cover"
+                className="h-[420px] w-full object-cover"
               />
               {images.length > 1 && (
                 <div className="flex gap-3 overflow-x-auto p-4">
