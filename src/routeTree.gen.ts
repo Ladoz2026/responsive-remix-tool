@@ -23,6 +23,7 @@ import { Route as AuthenticatedDashboardRouteImport } from './routes/_authentica
 import { Route as AuthenticatedFavorisRouteImport } from './routes/_authenticated/favoris'
 import { Route as AuthenticatedMessagesRouteImport } from './routes/_authenticated/messages'
 import { Route as AuthenticatedNewsletterRouteImport } from './routes/_authenticated/newsletter'
+import { Route as AuthenticatedStatistiquesRouteImport } from './routes/_authenticated/statistiques'
 import { Route as BienIdRouteImport } from './routes/bien.$id'
 import { Route as LovableEmailAuthPreviewRouteImport } from './routes/lovable/email/auth/preview'
 import { Route as LovableEmailAuthWebhookRouteImport } from './routes/lovable/email/auth/webhook'
@@ -96,6 +97,12 @@ const AuthenticatedNewsletterRoute = AuthenticatedNewsletterRouteImport.update({
   path: '/newsletter',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedStatistiquesRoute =
+  AuthenticatedStatistiquesRouteImport.update({
+    id: '/statistiques',
+    path: '/statistiques',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const BienIdRoute = BienIdRouteImport.update({
   id: '/bien/$id',
   path: '/bien/$id',
@@ -126,6 +133,7 @@ export interface FileRoutesByFullPath {
   '/favoris': typeof AuthenticatedFavorisRoute
   '/messages': typeof AuthenticatedMessagesRoute
   '/newsletter': typeof AuthenticatedNewsletterRoute
+  '/statistiques': typeof AuthenticatedStatistiquesRoute
   '/bien/$id': typeof BienIdRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
@@ -144,6 +152,7 @@ export interface FileRoutesByTo {
   '/favoris': typeof AuthenticatedFavorisRoute
   '/messages': typeof AuthenticatedMessagesRoute
   '/newsletter': typeof AuthenticatedNewsletterRoute
+  '/statistiques': typeof AuthenticatedStatistiquesRoute
   '/bien/$id': typeof BienIdRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
@@ -164,6 +173,7 @@ export interface FileRoutesById {
   '/_authenticated/favoris': typeof AuthenticatedFavorisRoute
   '/_authenticated/messages': typeof AuthenticatedMessagesRoute
   '/_authenticated/newsletter': typeof AuthenticatedNewsletterRoute
+  '/_authenticated/statistiques': typeof AuthenticatedStatistiquesRoute
   '/bien/$id': typeof BienIdRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
@@ -184,6 +194,7 @@ export interface FileRouteTypes {
     | '/favoris'
     | '/messages'
     | '/newsletter'
+    | '/statistiques'
     | '/bien/$id'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
@@ -202,6 +213,7 @@ export interface FileRouteTypes {
     | '/favoris'
     | '/messages'
     | '/newsletter'
+    | '/statistiques'
     | '/bien/$id'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
@@ -221,6 +233,7 @@ export interface FileRouteTypes {
     | '/_authenticated/favoris'
     | '/_authenticated/messages'
     | '/_authenticated/newsletter'
+    | '/_authenticated/statistiques'
     | '/bien/$id'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
@@ -339,6 +352,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedNewsletterRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/statistiques': {
+      id: '/_authenticated/statistiques'
+      path: '/statistiques'
+      fullPath: '/statistiques'
+      preLoaderRoute: typeof AuthenticatedStatistiquesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/bien/$id': {
       id: '/bien/$id'
       path: '/bien/$id'
@@ -371,6 +391,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedFavorisRoute: typeof AuthenticatedFavorisRoute
   AuthenticatedMessagesRoute: typeof AuthenticatedMessagesRoute
   AuthenticatedNewsletterRoute: typeof AuthenticatedNewsletterRoute
+  AuthenticatedStatistiquesRoute: typeof AuthenticatedStatistiquesRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -381,6 +402,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedFavorisRoute: AuthenticatedFavorisRoute,
   AuthenticatedMessagesRoute: AuthenticatedMessagesRoute,
   AuthenticatedNewsletterRoute: AuthenticatedNewsletterRoute,
+  AuthenticatedStatistiquesRoute: AuthenticatedStatistiquesRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
@@ -401,3 +423,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
