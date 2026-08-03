@@ -26,7 +26,9 @@ export function Header() {
     ...(user
       ? [
           { label: "Favoris", href: "/favoris" },
+          { label: "Alertes", href: "/alertes" },
           { label: "Messages", href: "/messages" },
+
         ]
       : []),
     ...(user && (isAdmin || isAgent || isOwner) ? [{ label: "CRM", href: "/crm" }] : []),
