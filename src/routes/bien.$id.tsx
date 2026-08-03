@@ -14,6 +14,8 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 import { Header } from "@/components/site/Header";
+import { PropertyMap } from "@/components/site/PropertyMap";
+import { PropertyReviews } from "@/components/site/PropertyReviews";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -310,6 +312,14 @@ function PropertyDetail() {
                 </div>
               )}
             </div>
+
+            <PropertyMap
+              latitude={property.latitude}
+              longitude={property.longitude}
+              title={property.title}
+            />
+
+            <PropertyReviews propertyId={property.id} />
           </div>
 
           <aside className="lg:sticky lg:top-28 lg:self-start">
