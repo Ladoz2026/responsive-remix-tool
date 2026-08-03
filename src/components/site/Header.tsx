@@ -3,11 +3,12 @@ import { Link } from "@tanstack/react-router";
 import { Crown, Menu, X } from "lucide-react";
 
 import { useAuth } from "@/hooks/useAuth";
+import { useRoles } from "@/hooks/useRoles";
 
-const links = [
+const baseLinks = [
   { label: "Acheter", href: "/recherche" },
   { label: "Louer", href: "/recherche" },
-  { label: "Favoris", href: "/favoris" },
+
   { label: "Vendre", href: "#cta" },
   { label: "Agences", href: "#validation" },
   { label: "Blog", href: "#magazine" },
@@ -17,6 +18,17 @@ const links = [
 export function Header() {
   const [open, setOpen] = useState(false);
   const { user } = useAuth();
+  const { isAdmin } = useRoles();
+  const links = [
+    ...baseLinks,
+    ...(user
+      ? [
+          { label: "Favoris", href: "/favoris" },
+          { label: "Messages", href: "/messages" },
+        ]
+      : []),
+    ...(isAdmin ? [{ label: "Admin", href: "/admin" }] : []),
+  ];
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
