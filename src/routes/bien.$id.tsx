@@ -26,7 +26,7 @@ import { formatPrice, formatSurface } from "@/lib/format";
 import fallbackImage from "@/assets/prop-house.jpg";
 
 export const Route = createFileRoute("/bien/$id")({
-  head: () => ({
+  head: ({ params }) => ({
     meta: [
       { title: "Détail du bien | SeLoger CI" },
       {
@@ -40,7 +40,43 @@ export const Route = createFileRoute("/bien/$id")({
         content: "Consultez les caractéristiques complètes de ce bien vérifié sur SeLoger CI.",
       },
       { property: "og:type", content: "article" },
+      {
+        property: "og:url",
+        content: `https://seloger-ci.poroinfo.net/bien/${params.id}`,
+      },
       { name: "twitter:card", content: "summary_large_image" },
+    ],
+    links: [
+      { rel: "canonical", href: `https://seloger-ci.poroinfo.net/bien/${params.id}` },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            {
+              "@type": "ListItem",
+              position: 1,
+              name: "Accueil",
+              item: "https://seloger-ci.poroinfo.net/",
+            },
+            {
+              "@type": "ListItem",
+              position: 2,
+              name: "Recherche",
+              item: "https://seloger-ci.poroinfo.net/recherche",
+            },
+            {
+              "@type": "ListItem",
+              position: 3,
+              name: "Détail du bien",
+              item: `https://seloger-ci.poroinfo.net/bien/${params.id}`,
+            },
+          ],
+        }),
+      },
     ],
   }),
   component: PropertyDetail,
