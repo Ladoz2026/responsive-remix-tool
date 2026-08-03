@@ -1,14 +1,17 @@
 import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
-import { Loader2, SlidersHorizontal } from "lucide-react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { BellRing, Loader2, SlidersHorizontal } from "lucide-react";
+import { toast } from "sonner";
 
 import { Header } from "@/components/site/Header";
 import { PropertyCard, type PropertyCardData } from "@/components/site/PropertyCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
+
 
 export const Route = createFileRoute("/recherche")({
   head: () => ({
