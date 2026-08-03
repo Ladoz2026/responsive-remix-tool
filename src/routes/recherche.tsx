@@ -1,14 +1,17 @@
 import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
-import { Loader2, SlidersHorizontal } from "lucide-react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { BellRing, Loader2, SlidersHorizontal } from "lucide-react";
+import { toast } from "sonner";
 
 import { Header } from "@/components/site/Header";
 import { PropertyCard, type PropertyCardData } from "@/components/site/PropertyCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
+
 
 export const Route = createFileRoute("/recherche")({
   head: () => ({
@@ -75,7 +78,9 @@ const amenityOptions = [
 const propertyTypes = ["appartement", "villa", "maison", "bureau", "terrain", "commerce"] as const;
 
 function SearchPage() {
+  const { user } = useAuth();
   const [draft, setDraft] = useState<Filters>(emptyFilters);
+
   const [filters, setFilters] = useState<Filters>(emptyFilters);
   const [panelOpen, setPanelOpen] = useState(false);
 
@@ -158,6 +163,36 @@ function SearchPage() {
 
   const update = (patch: Partial<Filters>) => setDraft((prev) => ({ ...prev, ...patch }));
 
+  const saveAlert = useMutation({
+    mutationFn: async () => {
+      if (!user) throw new Error("Connectez-vous pour créer une alerte");
+      const cityName = cities?.find((c) => c.id === draft.cityId)?.name ?? null;
+      const districtName = districts?.find((d) => d.id === draft.districtId)?.name ?? null;
+      const label =
+        [draft.q, cityName, draft.propertyType].filter(Boolean).join(" ").trim() ||
+        "Ma recherche";
+      const { error } = await supabase.from("saved_searches").insert({
+        user_id: user.id,
+        name: label.slice(0, 80),
+        transaction: (draft.transaction || null) as "vente" | "location" | null,
+        property_type: (draft.propertyType || null) as (typeof propertyTypes)[number] | null,
+        city: cityName,
+        district: districtName,
+        min_price: draft.minPrice ? Number(draft.minPrice) : null,
+        max_price: draft.maxPrice ? Number(draft.maxPrice) : null,
+        min_surface: draft.minSurface ? Number(draft.minSurface) : null,
+        min_bedrooms: draft.bedrooms ? Number(draft.bedrooms) : null,
+        requires_pool: draft.amenities.includes("has_pool"),
+        requires_garage: draft.amenities.includes("has_garage"),
+        requires_furnished: draft.amenities.includes("is_furnished"),
+      });
+      if (error) throw error;
+    },
+    onSuccess: () => toast.success("Alerte créée — retrouvez-la dans « Alertes »"),
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+
   return (
     <div className="min-h-screen bg-secondary/40">
       <Header />
@@ -194,6 +229,25 @@ function SearchPage() {
               Rechercher
             </Button>
           </div>
+
+          <div className="mt-3 flex justify-end">
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="rounded-full"
+              onClick={() => saveAlert.mutate()}
+              disabled={saveAlert.isPending}
+            >
+              {saveAlert.isPending ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <BellRing className="mr-2 h-4 w-4" />
+              )}
+              Créer une alerte avec ces critères
+            </Button>
+          </div>
+
 
           <div
             className={`grid overflow-hidden transition-[grid-template-rows,opacity] duration-400 ease-out ${
