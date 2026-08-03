@@ -20,6 +20,7 @@ export function Header() {
   const [open, setOpen] = useState(false);
   const { user } = useAuth();
   const { isAdmin } = useRoles();
+  const { isAdmin, isAgent, isOwner } = useRoles();
   const links = [
     ...baseLinks,
     ...(user
@@ -28,8 +29,10 @@ export function Header() {
           { label: "Messages", href: "/messages" },
         ]
       : []),
+    ...(user && (isAdmin || isAgent || isOwner) ? [{ label: "CRM", href: "/crm" }] : []),
     ...(isAdmin ? [{ label: "Admin", href: "/admin" }] : []),
   ];
+
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
