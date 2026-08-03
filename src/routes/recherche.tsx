@@ -161,6 +161,36 @@ function SearchPage() {
 
   const update = (patch: Partial<Filters>) => setDraft((prev) => ({ ...prev, ...patch }));
 
+  const saveAlert = useMutation({
+    mutationFn: async () => {
+      if (!user) throw new Error("Connectez-vous pour créer une alerte");
+      const cityName = cities?.find((c) => c.id === draft.cityId)?.name ?? null;
+      const districtName = districts?.find((d) => d.id === draft.districtId)?.name ?? null;
+      const label =
+        [draft.q, cityName, draft.propertyType].filter(Boolean).join(" ").trim() ||
+        "Ma recherche";
+      const { error } = await supabase.from("saved_searches").insert({
+        user_id: user.id,
+        name: label.slice(0, 80),
+        transaction: (draft.transaction || null) as "vente" | "location" | null,
+        property_type: (draft.propertyType || null) as (typeof propertyTypes)[number] | null,
+        city: cityName,
+        district: districtName,
+        min_price: draft.minPrice ? Number(draft.minPrice) : null,
+        max_price: draft.maxPrice ? Number(draft.maxPrice) : null,
+        min_surface: draft.minSurface ? Number(draft.minSurface) : null,
+        min_bedrooms: draft.bedrooms ? Number(draft.bedrooms) : null,
+        requires_pool: draft.amenities.includes("has_pool"),
+        requires_garage: draft.amenities.includes("has_garage"),
+        requires_furnished: draft.amenities.includes("is_furnished"),
+      });
+      if (error) throw error;
+    },
+    onSuccess: () => toast.success("Alerte créée — retrouvez-la dans « Alertes »"),
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+
   return (
     <div className="min-h-screen bg-secondary/40">
       <Header />
