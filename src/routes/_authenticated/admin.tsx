@@ -78,8 +78,10 @@ function AdminPage() {
       status: Database["public"]["Enums"]["listing_status"];
       verified?: boolean;
     }) => {
-      const patch: Record<string, unknown> = { status: input.status };
-      if (input.verified !== undefined) patch["is_verified"] = input.verified;
+      const patch: Database["public"]["Tables"]["properties"]["Update"] = {
+        status: input.status,
+        ...(input.verified !== undefined ? { is_verified: input.verified } : {}),
+      };
       const { error } = await supabase.from("properties").update(patch).eq("id", input.id);
       if (error) throw error;
     },
