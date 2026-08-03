@@ -150,6 +150,14 @@ function AuthPage() {
               maxLength={72}
             />
           </div>
+          {mode === "login" && (
+            <Link
+              to="/mot-de-passe-oublie"
+              className="justify-self-end text-xs font-semibold text-gold hover:underline"
+            >
+              Mot de passe oublié ?
+            </Link>
+          )}
           <Button type="submit" disabled={loading} className="rounded-full">
             {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {mode === "login" ? "Se connecter" : "Créer mon compte"}

@@ -5,8 +5,9 @@ import { Crown, Menu, X } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 
 const links = [
-  { label: "Acheter", href: "#properties" },
-  { label: "Louer", href: "#properties" },
+  { label: "Acheter", href: "/recherche" },
+  { label: "Louer", href: "/recherche" },
+  { label: "Favoris", href: "/favoris" },
   { label: "Vendre", href: "#cta" },
   { label: "Agences", href: "#validation" },
   { label: "Blog", href: "#magazine" },
