@@ -19,6 +19,7 @@ Disallow: /messages
 Disallow: /favoris
 Disallow: /alertes
 Disallow: /newsletter
+Disallow: /statistiques
 Disallow: /reset-password
 
 Sitemap: https://seloger-ci.poroinfo.net/sitemap.xml
