@@ -764,6 +764,69 @@ export type Database = {
           },
         ]
       }
+      saved_searches: {
+        Row: {
+          city: string | null
+          created_at: string
+          district: string | null
+          id: string
+          is_active: boolean
+          last_notified_at: string | null
+          max_price: number | null
+          min_bedrooms: number | null
+          min_price: number | null
+          min_surface: number | null
+          name: string
+          property_type: Database["public"]["Enums"]["property_type"] | null
+          requires_furnished: boolean
+          requires_garage: boolean
+          requires_pool: boolean
+          transaction: Database["public"]["Enums"]["transaction_type"] | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          city?: string | null
+          created_at?: string
+          district?: string | null
+          id?: string
+          is_active?: boolean
+          last_notified_at?: string | null
+          max_price?: number | null
+          min_bedrooms?: number | null
+          min_price?: number | null
+          min_surface?: number | null
+          name: string
+          property_type?: Database["public"]["Enums"]["property_type"] | null
+          requires_furnished?: boolean
+          requires_garage?: boolean
+          requires_pool?: boolean
+          transaction?: Database["public"]["Enums"]["transaction_type"] | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          city?: string | null
+          created_at?: string
+          district?: string | null
+          id?: string
+          is_active?: boolean
+          last_notified_at?: string | null
+          max_price?: number | null
+          min_bedrooms?: number | null
+          min_price?: number | null
+          min_surface?: number | null
+          name?: string
+          property_type?: Database["public"]["Enums"]["property_type"] | null
+          requires_furnished?: boolean
+          requires_garage?: boolean
+          requires_pool?: boolean
+          transaction?: Database["public"]["Enums"]["transaction_type"] | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       settings: {
         Row: {
           key: string
