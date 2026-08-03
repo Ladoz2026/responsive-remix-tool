@@ -240,8 +240,15 @@ export type Database = {
       }
     }
     Enums: {
-      app_role: "admin" | "agent" | "user"
-      listing_status: "brouillon" | "en_revue" | "publie" | "archive"
+      app_role: "admin" | "agent" | "user" | "proprietaire" | "visiteur"
+      listing_status:
+        | "brouillon"
+        | "en_revue"
+        | "publie"
+        | "archive"
+        | "attente_paiement"
+        | "refuse"
+        | "expire"
       property_type:
         | "appartement"
         | "villa"
@@ -378,8 +385,16 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "agent", "user"],
-      listing_status: ["brouillon", "en_revue", "publie", "archive"],
+      app_role: ["admin", "agent", "user", "proprietaire", "visiteur"],
+      listing_status: [
+        "brouillon",
+        "en_revue",
+        "publie",
+        "archive",
+        "attente_paiement",
+        "refuse",
+        "expire",
+      ],
       property_type: [
         "appartement",
         "villa",
