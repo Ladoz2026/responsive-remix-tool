@@ -10,246 +10,33 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
-import { Route as AuthRouteImport } from './routes/auth'
-import { Route as MotDePasseOublieRouteImport } from './routes/mot-de-passe-oublie'
-import { Route as RechercheRouteImport } from './routes/recherche'
-import { Route as ResetPasswordRouteImport } from './routes/reset-password'
-import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
-import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
-import { Route as AuthenticatedAlertesRouteImport } from './routes/_authenticated/alertes'
-import { Route as AuthenticatedCrmRouteImport } from './routes/_authenticated/crm'
-import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
-import { Route as AuthenticatedFavorisRouteImport } from './routes/_authenticated/favoris'
-import { Route as AuthenticatedMessagesRouteImport } from './routes/_authenticated/messages'
-import { Route as AuthenticatedNewsletterRouteImport } from './routes/_authenticated/newsletter'
-import { Route as AuthenticatedStatistiquesRouteImport } from './routes/_authenticated/statistiques'
-import { Route as BienIdRouteImport } from './routes/bien.$id'
-import { Route as LovableEmailAuthPreviewRouteImport } from './routes/lovable/email/auth/preview'
-import { Route as LovableEmailAuthWebhookRouteImport } from './routes/lovable/email/auth/webhook'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
-  id: '/_authenticated',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthRoute = AuthRouteImport.update({
-  id: '/auth',
-  path: '/auth',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MotDePasseOublieRoute = MotDePasseOublieRouteImport.update({
-  id: '/mot-de-passe-oublie',
-  path: '/mot-de-passe-oublie',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const RechercheRoute = RechercheRouteImport.update({
-  id: '/recherche',
-  path: '/recherche',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ResetPasswordRoute = ResetPasswordRouteImport.update({
-  id: '/reset-password',
-  path: '/reset-password',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
-  id: '/sitemap.xml',
-  path: '/sitemap.xml',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
-  id: '/admin',
-  path: '/admin',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedAlertesRoute = AuthenticatedAlertesRouteImport.update({
-  id: '/alertes',
-  path: '/alertes',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedCrmRoute = AuthenticatedCrmRouteImport.update({
-  id: '/crm',
-  path: '/crm',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedFavorisRoute = AuthenticatedFavorisRouteImport.update({
-  id: '/favoris',
-  path: '/favoris',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedMessagesRoute = AuthenticatedMessagesRouteImport.update({
-  id: '/messages',
-  path: '/messages',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedNewsletterRoute = AuthenticatedNewsletterRouteImport.update({
-  id: '/newsletter',
-  path: '/newsletter',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedStatistiquesRoute =
-  AuthenticatedStatistiquesRouteImport.update({
-    id: '/statistiques',
-    path: '/statistiques',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const BienIdRoute = BienIdRouteImport.update({
-  id: '/bien/$id',
-  path: '/bien/$id',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LovableEmailAuthPreviewRoute = LovableEmailAuthPreviewRouteImport.update({
-  id: '/lovable/email/auth/preview',
-  path: '/lovable/email/auth/preview',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LovableEmailAuthWebhookRoute = LovableEmailAuthWebhookRouteImport.update({
-  id: '/lovable/email/auth/webhook',
-  path: '/lovable/email/auth/webhook',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/auth': typeof AuthRoute
-  '/mot-de-passe-oublie': typeof MotDePasseOublieRoute
-  '/recherche': typeof RechercheRoute
-  '/reset-password': typeof ResetPasswordRoute
-  '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/admin': typeof AuthenticatedAdminRoute
-  '/alertes': typeof AuthenticatedAlertesRoute
-  '/crm': typeof AuthenticatedCrmRoute
-  '/dashboard': typeof AuthenticatedDashboardRoute
-  '/favoris': typeof AuthenticatedFavorisRoute
-  '/messages': typeof AuthenticatedMessagesRoute
-  '/newsletter': typeof AuthenticatedNewsletterRoute
-  '/statistiques': typeof AuthenticatedStatistiquesRoute
-  '/bien/$id': typeof BienIdRoute
-  '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
-  '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/auth': typeof AuthRoute
-  '/mot-de-passe-oublie': typeof MotDePasseOublieRoute
-  '/recherche': typeof RechercheRoute
-  '/reset-password': typeof ResetPasswordRoute
-  '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/admin': typeof AuthenticatedAdminRoute
-  '/alertes': typeof AuthenticatedAlertesRoute
-  '/crm': typeof AuthenticatedCrmRoute
-  '/dashboard': typeof AuthenticatedDashboardRoute
-  '/favoris': typeof AuthenticatedFavorisRoute
-  '/messages': typeof AuthenticatedMessagesRoute
-  '/newsletter': typeof AuthenticatedNewsletterRoute
-  '/statistiques': typeof AuthenticatedStatistiquesRoute
-  '/bien/$id': typeof BienIdRoute
-  '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
-  '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
-  '/auth': typeof AuthRoute
-  '/mot-de-passe-oublie': typeof MotDePasseOublieRoute
-  '/recherche': typeof RechercheRoute
-  '/reset-password': typeof ResetPasswordRoute
-  '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/_authenticated/admin': typeof AuthenticatedAdminRoute
-  '/_authenticated/alertes': typeof AuthenticatedAlertesRoute
-  '/_authenticated/crm': typeof AuthenticatedCrmRoute
-  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
-  '/_authenticated/favoris': typeof AuthenticatedFavorisRoute
-  '/_authenticated/messages': typeof AuthenticatedMessagesRoute
-  '/_authenticated/newsletter': typeof AuthenticatedNewsletterRoute
-  '/_authenticated/statistiques': typeof AuthenticatedStatistiquesRoute
-  '/bien/$id': typeof BienIdRoute
-  '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
-  '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/auth'
-    | '/mot-de-passe-oublie'
-    | '/recherche'
-    | '/reset-password'
-    | '/sitemap.xml'
-    | '/admin'
-    | '/alertes'
-    | '/crm'
-    | '/dashboard'
-    | '/favoris'
-    | '/messages'
-    | '/newsletter'
-    | '/statistiques'
-    | '/bien/$id'
-    | '/lovable/email/auth/preview'
-    | '/lovable/email/auth/webhook'
+  fullPaths: '/'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/auth'
-    | '/mot-de-passe-oublie'
-    | '/recherche'
-    | '/reset-password'
-    | '/sitemap.xml'
-    | '/admin'
-    | '/alertes'
-    | '/crm'
-    | '/dashboard'
-    | '/favoris'
-    | '/messages'
-    | '/newsletter'
-    | '/statistiques'
-    | '/bien/$id'
-    | '/lovable/email/auth/preview'
-    | '/lovable/email/auth/webhook'
-  id:
-    | '__root__'
-    | '/'
-    | '/_authenticated'
-    | '/auth'
-    | '/mot-de-passe-oublie'
-    | '/recherche'
-    | '/reset-password'
-    | '/sitemap.xml'
-    | '/_authenticated/admin'
-    | '/_authenticated/alertes'
-    | '/_authenticated/crm'
-    | '/_authenticated/dashboard'
-    | '/_authenticated/favoris'
-    | '/_authenticated/messages'
-    | '/_authenticated/newsletter'
-    | '/_authenticated/statistiques'
-    | '/bien/$id'
-    | '/lovable/email/auth/preview'
-    | '/lovable/email/auth/webhook'
+  to: '/'
+  id: '__root__' | '/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
-  AuthRoute: typeof AuthRoute
-  MotDePasseOublieRoute: typeof MotDePasseOublieRoute
-  RechercheRoute: typeof RechercheRoute
-  ResetPasswordRoute: typeof ResetPasswordRoute
-  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
-  BienIdRoute: typeof BienIdRoute
-  LovableEmailAuthPreviewRoute: typeof LovableEmailAuthPreviewRoute
-  LovableEmailAuthWebhookRoute: typeof LovableEmailAuthWebhookRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -261,164 +48,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated': {
-      id: '/_authenticated'
-      path: ''
-      fullPath: '/'
-      preLoaderRoute: typeof AuthenticatedRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/mot-de-passe-oublie': {
-      id: '/mot-de-passe-oublie'
-      path: '/mot-de-passe-oublie'
-      fullPath: '/mot-de-passe-oublie'
-      preLoaderRoute: typeof MotDePasseOublieRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/recherche': {
-      id: '/recherche'
-      path: '/recherche'
-      fullPath: '/recherche'
-      preLoaderRoute: typeof RechercheRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/reset-password': {
-      id: '/reset-password'
-      path: '/reset-password'
-      fullPath: '/reset-password'
-      preLoaderRoute: typeof ResetPasswordRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/sitemap.xml': {
-      id: '/sitemap.xml'
-      path: '/sitemap.xml'
-      fullPath: '/sitemap.xml'
-      preLoaderRoute: typeof SitemapDotxmlRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_authenticated/admin': {
-      id: '/_authenticated/admin'
-      path: '/admin'
-      fullPath: '/admin'
-      preLoaderRoute: typeof AuthenticatedAdminRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/alertes': {
-      id: '/_authenticated/alertes'
-      path: '/alertes'
-      fullPath: '/alertes'
-      preLoaderRoute: typeof AuthenticatedAlertesRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/crm': {
-      id: '/_authenticated/crm'
-      path: '/crm'
-      fullPath: '/crm'
-      preLoaderRoute: typeof AuthenticatedCrmRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/dashboard': {
-      id: '/_authenticated/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/favoris': {
-      id: '/_authenticated/favoris'
-      path: '/favoris'
-      fullPath: '/favoris'
-      preLoaderRoute: typeof AuthenticatedFavorisRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/messages': {
-      id: '/_authenticated/messages'
-      path: '/messages'
-      fullPath: '/messages'
-      preLoaderRoute: typeof AuthenticatedMessagesRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/newsletter': {
-      id: '/_authenticated/newsletter'
-      path: '/newsletter'
-      fullPath: '/newsletter'
-      preLoaderRoute: typeof AuthenticatedNewsletterRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/statistiques': {
-      id: '/_authenticated/statistiques'
-      path: '/statistiques'
-      fullPath: '/statistiques'
-      preLoaderRoute: typeof AuthenticatedStatistiquesRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/bien/$id': {
-      id: '/bien/$id'
-      path: '/bien/$id'
-      fullPath: '/bien/$id'
-      preLoaderRoute: typeof BienIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/lovable/email/auth/preview': {
-      id: '/lovable/email/auth/preview'
-      path: '/lovable/email/auth/preview'
-      fullPath: '/lovable/email/auth/preview'
-      preLoaderRoute: typeof LovableEmailAuthPreviewRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/lovable/email/auth/webhook': {
-      id: '/lovable/email/auth/webhook'
-      path: '/lovable/email/auth/webhook'
-      fullPath: '/lovable/email/auth/webhook'
-      preLoaderRoute: typeof LovableEmailAuthWebhookRouteImport
-      parentRoute: typeof rootRouteImport
-    }
   }
 }
 
-interface AuthenticatedRouteRouteChildren {
-  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
-  AuthenticatedAlertesRoute: typeof AuthenticatedAlertesRoute
-  AuthenticatedCrmRoute: typeof AuthenticatedCrmRoute
-  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
-  AuthenticatedFavorisRoute: typeof AuthenticatedFavorisRoute
-  AuthenticatedMessagesRoute: typeof AuthenticatedMessagesRoute
-  AuthenticatedNewsletterRoute: typeof AuthenticatedNewsletterRoute
-  AuthenticatedStatistiquesRoute: typeof AuthenticatedStatistiquesRoute
-}
-
-const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
-  AuthenticatedAlertesRoute: AuthenticatedAlertesRoute,
-  AuthenticatedCrmRoute: AuthenticatedCrmRoute,
-  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
-  AuthenticatedFavorisRoute: AuthenticatedFavorisRoute,
-  AuthenticatedMessagesRoute: AuthenticatedMessagesRoute,
-  AuthenticatedNewsletterRoute: AuthenticatedNewsletterRoute,
-  AuthenticatedStatistiquesRoute: AuthenticatedStatistiquesRoute,
-}
-
-const AuthenticatedRouteRouteWithChildren =
-  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
-  AuthRoute: AuthRoute,
-  MotDePasseOublieRoute: MotDePasseOublieRoute,
-  RechercheRoute: RechercheRoute,
-  ResetPasswordRoute: ResetPasswordRoute,
-  SitemapDotxmlRoute: SitemapDotxmlRoute,
-  BienIdRoute: BienIdRoute,
-  LovableEmailAuthPreviewRoute: LovableEmailAuthPreviewRoute,
-  LovableEmailAuthWebhookRoute: LovableEmailAuthWebhookRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

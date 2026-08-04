@@ -1,1 +1,0 @@
-REVOKE EXECUTE ON FUNCTION public.can_manage_lead(uuid, uuid) FROM anon, public;

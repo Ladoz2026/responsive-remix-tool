@@ -22,7 +22,6 @@ export function Hero() {
         <img
           src={heroVilla}
           alt="Villa de luxe avec piscine en Côte d'Ivoire au coucher du soleil"
-          fetchPriority="high"
           width={1920}
           height={1200}
           className="absolute inset-0 h-full w-full object-cover"

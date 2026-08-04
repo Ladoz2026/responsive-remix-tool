@@ -8,7 +8,6 @@ import { Validation } from "@/components/site/Validation";
 import { Testimonials } from "@/components/site/Testimonials";
 import { Magazine } from "@/components/site/Magazine";
 import { CtaFooter } from "@/components/site/CtaFooter";
-import { NewsletterSignup } from "@/components/site/NewsletterSignup";
 
 const title = "SeLogerCI — Immobilier premium en Côte d'Ivoire";
 const description =
@@ -22,26 +21,7 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: title },
       { property: "og:description", content: description },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "https://seloger-ci.poroinfo.net/" },
       { name: "twitter:card", content: "summary_large_image" },
-    ],
-    links: [{ rel: "canonical", href: "https://seloger-ci.poroinfo.net/" }],
-    scripts: [
-      {
-        type: "application/ld+json",
-        children: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "WebSite",
-          name: "SeLoger CI",
-          url: "https://seloger-ci.poroinfo.net",
-          potentialAction: {
-            "@type": "SearchAction",
-            target:
-              "https://seloger-ci.poroinfo.net/recherche?ville={search_term_string}",
-            "query-input": "required name=search_term_string",
-          },
-        }),
-      },
     ],
   }),
   component: Index,
@@ -59,8 +39,7 @@ function Index() {
         <Validation />
         <Testimonials />
         <Magazine />
-        <NewsletterSignup />
-      <CtaFooter />
+        <CtaFooter />
       </main>
     </div>
   );

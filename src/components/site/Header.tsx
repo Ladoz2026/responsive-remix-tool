@@ -1,15 +1,9 @@
 import { useEffect, useState } from "react";
-import { Link } from "@tanstack/react-router";
 import { Crown, Menu, X } from "lucide-react";
 
-import { useAuth } from "@/hooks/useAuth";
-import { useRoles } from "@/hooks/useRoles";
-import { NotificationsBell } from "@/components/site/NotificationsBell";
-
-const baseLinks = [
-  { label: "Acheter", href: "/recherche" },
-  { label: "Louer", href: "/recherche" },
-
+const links = [
+  { label: "Acheter", href: "#properties" },
+  { label: "Louer", href: "#properties" },
   { label: "Vendre", href: "#cta" },
   { label: "Agences", href: "#validation" },
   { label: "Blog", href: "#magazine" },
@@ -18,25 +12,6 @@ const baseLinks = [
 
 export function Header() {
   const [open, setOpen] = useState(false);
-  const { user } = useAuth();
-  const { isAdmin, isAgent, isOwner } = useRoles();
-
-  const links = [
-    ...baseLinks,
-    ...(user
-      ? [
-          { label: "Favoris", href: "/favoris" },
-          { label: "Alertes", href: "/alertes" },
-          { label: "Messages", href: "/messages" },
-
-        ]
-      : []),
-    ...(user && (isAdmin || isAgent || isOwner) ? [{ label: "CRM", href: "/crm" }] : []),
-    ...(isAdmin ? [{ label: "Admin", href: "/admin" }] : []),
-    ...(user && (isAdmin || isAgent || isOwner) ? [{ label: "Stats", href: "/statistiques" }] : []),
-    ...(isAdmin ? [{ label: "Newsletter", href: "/newsletter" }] : []),
-  ];
-
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -81,32 +56,27 @@ export function Header() {
         </nav>
 
         <div className="ml-auto hidden items-center gap-3 lg:flex">
-          <NotificationsBell light={!scrolled} />
-          <Link
-            to={user ? "/dashboard" : "/auth"}
+          <a
+            href="#cta"
             className={`text-sm font-medium transition-colors hover:text-gold ${
               scrolled ? "text-foreground" : "text-primary-foreground"
             }`}
           >
-            {user ? "Mon espace" : "Connexion"}
-          </Link>
-          <Link
-            to={user ? "/dashboard" : "/auth"}
+            Connexion
+          </a>
+          <a
+            href="#cta"
             className="rounded-full gold-gradient px-5 py-2.5 text-sm font-bold text-accent-foreground shadow-gold transition-transform hover:-translate-y-0.5"
           >
             Publier une annonce
-          </Link>
-        </div>
-
-        <div className="ml-auto lg:hidden">
-          <NotificationsBell light={!scrolled} />
+          </a>
         </div>
 
         <button
           type="button"
           aria-label="Ouvrir le menu"
           onClick={() => setOpen((v) => !v)}
-          className={`grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-border/40 lg:hidden ${
+          className={`ml-auto grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-border/40 lg:hidden ${
             scrolled ? "text-foreground" : "text-primary-foreground"
           }`}
         >
