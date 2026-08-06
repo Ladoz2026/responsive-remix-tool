@@ -1,9 +1,6 @@
-import { useState } from "react";
-import { Building2, BedDouble, MapPin, Search, Sparkles } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import heroVilla from "@/assets/hero-villa.jpg";
-
-const tabs = ["Acheter", "Louer", "Vendre"] as const;
-const quartiers = ["Cocody", "Plateau", "Marcory", "Bingerville", "Assinie"];
+import { SearchForm } from "@/components/site/SearchForm";
 
 const stats = [
   { value: "25 000+", label: "Annonces actives" },
@@ -13,8 +10,7 @@ const stats = [
 ];
 
 export function Hero() {
-  const [tab, setTab] = useState<(typeof tabs)[number]>("Acheter");
-  const [ville, setVille] = useState("");
+
 
   return (
     <section id="top" className="relative">
