@@ -10,33 +10,121 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as RechercheRouteImport } from './routes/recherche'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as BienIdRouteImport } from './routes/bien.$id'
+import { Route as AuthenticatedAnnoncesIdRouteImport } from './routes/_authenticated/annonces.$id'
+import { Route as AuthenticatedAnnoncesNouvelleRouteImport } from './routes/_authenticated/annonces.nouvelle'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RechercheRoute = RechercheRouteImport.update({
+  id: '/recherche',
+  path: '/recherche',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const BienIdRoute = BienIdRouteImport.update({
+  id: '/bien/$id',
+  path: '/bien/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedAnnoncesIdRoute = AuthenticatedAnnoncesIdRouteImport.update({
+  id: '/annonces/$id',
+  path: '/annonces/$id',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAnnoncesNouvelleRoute =
+  AuthenticatedAnnoncesNouvelleRouteImport.update({
+    id: '/annonces/nouvelle',
+    path: '/annonces/nouvelle',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/recherche': typeof RechercheRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/bien/$id': typeof BienIdRoute
+  '/annonces/$id': typeof AuthenticatedAnnoncesIdRoute
+  '/annonces/nouvelle': typeof AuthenticatedAnnoncesNouvelleRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/recherche': typeof RechercheRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/bien/$id': typeof BienIdRoute
+  '/annonces/$id': typeof AuthenticatedAnnoncesIdRoute
+  '/annonces/nouvelle': typeof AuthenticatedAnnoncesNouvelleRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/recherche': typeof RechercheRoute
+  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/bien/$id': typeof BienIdRoute
+  '/_authenticated/annonces/$id': typeof AuthenticatedAnnoncesIdRoute
+  '/_authenticated/annonces/nouvelle': typeof AuthenticatedAnnoncesNouvelleRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/recherche'
+    | '/dashboard'
+    | '/bien/$id'
+    | '/annonces/$id'
+    | '/annonces/nouvelle'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/auth'
+    | '/recherche'
+    | '/dashboard'
+    | '/bien/$id'
+    | '/annonces/$id'
+    | '/annonces/nouvelle'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/auth'
+    | '/recherche'
+    | '/_authenticated/dashboard'
+    | '/bien/$id'
+    | '/_authenticated/annonces/$id'
+    | '/_authenticated/annonces/nouvelle'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AuthRoute: typeof AuthRoute
+  RechercheRoute: typeof RechercheRoute
+  BienIdRoute: typeof BienIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,22 +136,80 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/recherche': {
+      id: '/recherche'
+      path: '/recherche'
+      fullPath: '/recherche'
+      preLoaderRoute: typeof RechercheRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/bien/$id': {
+      id: '/bien/$id'
+      path: '/bien/$id'
+      fullPath: '/bien/$id'
+      preLoaderRoute: typeof BienIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/annonces/$id': {
+      id: '/_authenticated/annonces/$id'
+      path: '/annonces/$id'
+      fullPath: '/annonces/$id'
+      preLoaderRoute: typeof AuthenticatedAnnoncesIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/annonces/nouvelle': {
+      id: '/_authenticated/annonces/nouvelle'
+      path: '/annonces/nouvelle'
+      fullPath: '/annonces/nouvelle'
+      preLoaderRoute: typeof AuthenticatedAnnoncesNouvelleRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedAnnoncesIdRoute: typeof AuthenticatedAnnoncesIdRoute
+  AuthenticatedAnnoncesNouvelleRoute: typeof AuthenticatedAnnoncesNouvelleRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedAnnoncesIdRoute: AuthenticatedAnnoncesIdRoute,
+  AuthenticatedAnnoncesNouvelleRoute: AuthenticatedAnnoncesNouvelleRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AuthRoute: AuthRoute,
+  RechercheRoute: RechercheRoute,
+  BienIdRoute: BienIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

@@ -1,4 +1,7 @@
+import { Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { referenceQuery } from "@/lib/property-queries";
 import apartment from "@/assets/prop-apartment.jpg";
 import villa from "@/assets/prop-villa.jpg";
 import house from "@/assets/prop-house.jpg";
@@ -6,16 +9,12 @@ import office from "@/assets/prop-office.jpg";
 import commercial from "@/assets/prop-commercial.jpg";
 import land from "@/assets/prop-land.jpg";
 
-const categories = [
-  { name: "Appartements", count: "1240 biens", img: apartment },
-  { name: "Villas", count: "386 biens", img: villa },
-  { name: "Maisons", count: "912 biens", img: house },
-  { name: "Bureaux", count: "174 biens", img: office },
-  { name: "Commerces", count: "221 biens", img: commercial },
-  { name: "Terrains", count: "530 biens", img: land },
-];
+const fallbackImages = [apartment, villa, house, office, commercial, land];
 
 export function Categories() {
+  const { data } = useQuery(referenceQuery);
+  const categories = data?.categories ?? [];
+
   return (
     <section id="categories" className="mx-auto max-w-7xl px-4 py-24 sm:px-6">
       <div className="grid gap-6 md:grid-cols-[1fr_auto] md:items-end">
@@ -29,23 +28,24 @@ export function Categories() {
             cherchez.
           </p>
         </div>
-        <a
-          href="#properties"
+        <Link
+          to="/recherche"
           className="inline-flex w-fit items-center gap-2 rounded-full border border-border px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-secondary"
         >
           Voir tout <ArrowRight className="h-4 w-4" />
-        </a>
+        </Link>
       </div>
 
       <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {categories.map((c) => (
-          <a
-            key={c.name}
-            href="#properties"
+        {categories.map((c, i) => (
+          <Link
+            key={c.id}
+            to="/recherche"
+            search={{ categoryId: c.id } as never}
             className="group relative block overflow-hidden rounded-3xl shadow-soft"
           >
             <img
-              src={c.img}
+              src={fallbackImages[i % fallbackImages.length]}
               alt={c.name}
               width={1024}
               height={768}
@@ -55,9 +55,8 @@ export function Categories() {
             <div className="absolute inset-0 hero-overlay" />
             <div className="absolute inset-x-0 bottom-0 p-5">
               <h3 className="text-lg font-bold text-primary-foreground">{c.name}</h3>
-              <p className="text-sm text-primary-foreground/70">{c.count}</p>
             </div>
-          </a>
+          </Link>
         ))}
       </div>
     </section>
