@@ -2,15 +2,15 @@ import { queryOptions } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
 export type SearchFilters = {
-  cityId?: string;
-  communeId?: string;
-  districtId?: string;
-  minPrice?: number;
-  maxPrice?: number;
-  transaction?: string;
-  categoryId?: string;
-  propertyType?: string;
-  q?: string;
+  cityId?: string | undefined;
+  communeId?: string | undefined;
+  districtId?: string | undefined;
+  minPrice?: number | undefined;
+  maxPrice?: number | undefined;
+  transaction?: string | undefined;
+  categoryId?: string | undefined;
+  propertyType?: string | undefined;
+  q?: string | undefined;
 };
 
 export const referenceQuery = queryOptions({
