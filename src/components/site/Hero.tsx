@@ -43,79 +43,10 @@ export function Hero() {
             Côte d'Ivoire.
           </p>
 
-          <form
-            onSubmit={(e) => e.preventDefault()}
-            className="mt-10 w-full max-w-4xl rounded-3xl glass-panel p-4 sm:p-5"
-          >
-            <div className="flex flex-wrap gap-2">
-              {tabs.map((t) => (
-                <button
-                  key={t}
-                  type="button"
-                  onClick={() => setTab(t)}
-                  className={`rounded-full px-5 py-2 text-sm font-semibold transition-colors ${
-                    tab === t
-                      ? "bg-card text-foreground shadow-soft"
-                      : "text-primary-foreground/80 hover:text-primary-foreground"
-                  }`}
-                >
-                  {t}
-                </button>
-              ))}
-            </div>
+          <div className="mt-10 w-full max-w-4xl">
+            <SearchForm />
+          </div>
 
-            <div className="mt-4 grid gap-3 lg:grid-cols-[1.4fr_1fr_1fr_auto]">
-              <label className="flex min-w-0 items-center gap-2 rounded-full bg-card px-4 py-3">
-                <MapPin className="h-4 w-4 shrink-0 text-muted-foreground" />
-                <input
-                  value={ville}
-                  onChange={(e) => setVille(e.target.value)}
-                  placeholder="Ville, quartier..."
-                  className="min-w-0 flex-1 bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground"
-                />
-              </label>
-              <label className="flex min-w-0 items-center gap-2 rounded-full bg-card px-4 py-3">
-                <Building2 className="h-4 w-4 shrink-0 text-muted-foreground" />
-                <select className="min-w-0 flex-1 bg-transparent text-sm text-foreground outline-none">
-                  <option>Type de bien</option>
-                  <option>Villa</option>
-                  <option>Appartement</option>
-                  <option>Terrain</option>
-                  <option>Bureau</option>
-                </select>
-              </label>
-              <label className="flex min-w-0 items-center gap-2 rounded-full bg-card px-4 py-3">
-                <BedDouble className="h-4 w-4 shrink-0 text-muted-foreground" />
-                <select className="min-w-0 flex-1 bg-transparent text-sm text-foreground outline-none">
-                  <option>Chambres</option>
-                  <option>1+</option>
-                  <option>2+</option>
-                  <option>3+</option>
-                  <option>4+</option>
-                </select>
-              </label>
-              <button
-                type="submit"
-                className="inline-flex items-center justify-center gap-2 rounded-full gold-gradient px-6 py-3 text-sm font-bold text-accent-foreground shadow-gold transition-transform hover:-translate-y-0.5"
-              >
-                <Search className="h-4 w-4" />
-                Rechercher
-              </button>
-            </div>
-
-            <div className="mt-4 flex flex-wrap gap-4">
-              {quartiers.map((q) => (
-                <button
-                  key={q}
-                  type="button"
-                  onClick={() => setVille(q)}
-                  className="text-xs font-medium text-primary-foreground/70 transition-colors hover:text-gold"
-                >
-                  {q}
-                </button>
-              ))}
-            </div>
-          </form>
         </div>
       </div>
 
