@@ -36,7 +36,7 @@ export default defineTool({
     const supabase = supabaseForUser(ctx);
     const { data, error } = await supabase
       .from("properties")
-      .update(updates)
+      .update(updates as never)
       .eq("id", id)
       .eq("owner_id", ctx.getUserId() as string)
       .select("id, title, price, status")

@@ -25,5 +25,5 @@ export default defineMcp({
     createProperty,
     updateProperty,
     listContactRequests,
-  ],
+  ] as never[],
 });
