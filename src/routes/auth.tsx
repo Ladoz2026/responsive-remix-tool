@@ -8,6 +8,9 @@ const title = "Connexion — SeLoger CI";
 const description = "Connectez-vous à votre espace agence SeLoger CI pour gérer vos annonces.";
 
 export const Route = createFileRoute("/auth")({
+  validateSearch: (s: Record<string, unknown>) => ({
+    next: typeof s['next'] === "string" && s['next'].startsWith("/") ? s['next'] : undefined,
+  }),
   head: () => ({
     meta: [
       { title },
@@ -23,6 +26,7 @@ export const Route = createFileRoute("/auth")({
 
 function AuthPage() {
   const navigate = useNavigate();
+  const { next } = Route.useSearch();
   const [mode, setMode] = useState<"login" | "signup">("login");
   const [loading, setLoading] = useState(false);
 
@@ -38,7 +42,7 @@ function AuthPage() {
         email,
         password,
         options: {
-          emailRedirectTo: window.location.origin,
+          emailRedirectTo: next ? window.location.origin + next : window.location.origin,
           data: {
             full_name: String(form.get("full_name") ?? ""),
             phone: String(form.get("phone") ?? ""),
@@ -54,6 +58,7 @@ function AuthPage() {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     setLoading(false);
     if (error) toast.error(error.message);
+    else if (next) window.location.href = next;
     else navigate({ to: "/dashboard" });
   }
 
