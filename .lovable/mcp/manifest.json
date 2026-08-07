@@ -1,0 +1,318 @@
+{
+  "version": 1,
+  "sdk_version": "0.26.1",
+  "path": "/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://ndbpbnzwmaherfguyslf.supabase.co/auth/v1",
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "site-duplicator",
+      "version": "0.1.0",
+      "title": "Site Duplicator"
+    },
+    "tools": [
+      {
+        "name": "search_properties",
+        "title": "Rechercher des biens",
+        "description": "Recherche les annonces immobilières publiées sur SeLoger CI (ville, type de bien, transaction, budget, chambres).",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "Mots-clés recherchés dans le titre ou la ville."
+            },
+            "city": {
+              "type": "string",
+              "description": "Nom de la ville, ex: Abidjan."
+            },
+            "property_type": {
+              "type": "string",
+              "enum": [
+                "appartement",
+                "villa",
+                "maison",
+                "bureau",
+                "terrain",
+                "commerce"
+              ]
+            },
+            "transaction": {
+              "type": "string",
+              "enum": [
+                "vente",
+                "location"
+              ]
+            },
+            "min_price": {
+              "type": "number",
+              "description": "Prix minimum en FCFA."
+            },
+            "max_price": {
+              "type": "number",
+              "description": "Prix maximum en FCFA."
+            },
+            "min_bedrooms": {
+              "type": "integer"
+            },
+            "limit": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50,
+              "description": "Nombre de résultats (défaut 20)."
+            }
+          },
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_property",
+        "title": "Détail d'un bien",
+        "description": "Récupère la fiche complète d'une annonce publiée SeLoger CI à partir de son identifiant.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid",
+              "description": "Identifiant (UUID) de l'annonce."
+            }
+          },
+          "required": [
+            "id"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_my_properties",
+        "title": "Mes annonces",
+        "description": "Liste les annonces de l'agence connectée, tous statuts confondus (brouillon, en revue, publiée, etc.).",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "brouillon",
+                "en_revue",
+                "publie",
+                "archive",
+                "attente_paiement",
+                "refuse",
+                "expire"
+              ],
+              "description": "Filtrer sur un statut précis."
+            },
+            "limit": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            }
+          },
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "create_property",
+        "title": "Créer une annonce",
+        "description": "Crée une nouvelle annonce immobilière pour l'agence connectée. L'annonce est créée en brouillon par défaut.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Titre de l'annonce."
+            },
+            "description": {
+              "type": "string"
+            },
+            "price": {
+              "type": "number",
+              "description": "Prix en FCFA."
+            },
+            "city": {
+              "type": "string",
+              "description": "Ville du bien."
+            },
+            "district": {
+              "type": "string",
+              "description": "Quartier."
+            },
+            "address": {
+              "type": "string"
+            },
+            "property_type": {
+              "type": "string",
+              "enum": [
+                "appartement",
+                "villa",
+                "maison",
+                "bureau",
+                "terrain",
+                "commerce"
+              ]
+            },
+            "transaction": {
+              "type": "string",
+              "enum": [
+                "vente",
+                "location"
+              ]
+            },
+            "bedrooms": {
+              "type": "integer"
+            },
+            "bathrooms": {
+              "type": "integer"
+            },
+            "surface_m2": {
+              "type": "number"
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "brouillon",
+                "en_revue",
+                "publie"
+              ]
+            }
+          },
+          "required": [
+            "title",
+            "price",
+            "city",
+            "property_type",
+            "transaction"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "update_property",
+        "title": "Modifier une annonce",
+        "description": "Met à jour une annonce appartenant à l'agence connectée (prix, titre, description, statut, caractéristiques).",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid",
+              "description": "Identifiant de l'annonce à modifier."
+            },
+            "title": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "price": {
+              "type": "number"
+            },
+            "city": {
+              "type": "string"
+            },
+            "district": {
+              "type": "string"
+            },
+            "bedrooms": {
+              "type": "integer"
+            },
+            "bathrooms": {
+              "type": "integer"
+            },
+            "surface_m2": {
+              "type": "number"
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "brouillon",
+                "en_revue",
+                "publie",
+                "archive"
+              ],
+              "description": "Nouveau statut de l'annonce."
+            }
+          },
+          "required": [
+            "id"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_contact_requests",
+        "title": "Demandes de contact",
+        "description": "Liste les demandes de contact (leads) reçues sur les annonces de l'agence connectée.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "nouveau",
+                "en_cours",
+                "traite"
+              ]
+            },
+            "limit": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            }
+          },
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
