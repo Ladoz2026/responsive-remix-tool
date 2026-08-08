@@ -19,6 +19,7 @@ import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as BienIdRouteImport } from './routes/bien.$id'
+import { Route as DiagnosticRlsRouteImport } from './routes/diagnostic_.rls'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 import { Route as AuthenticatedAnnoncesIdRouteImport } from './routes/_authenticated/annonces.$id'
@@ -75,6 +76,11 @@ const BienIdRoute = BienIdRouteImport.update({
   path: '/bien/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DiagnosticRlsRoute = DiagnosticRlsRouteImport.update({
+  id: '/diagnostic_/rls',
+  path: '/diagnostic/rls',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
   id: '/.lovable/oauth/consent',
   path: '/.lovable/oauth/consent',
@@ -108,6 +114,7 @@ export interface FileRoutesByFullPath {
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/bien/$id': typeof BienIdRoute
+  '/diagnostic/rls': typeof DiagnosticRlsRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/annonces/$id': typeof AuthenticatedAnnoncesIdRoute
@@ -123,6 +130,7 @@ export interface FileRoutesByTo {
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/bien/$id': typeof BienIdRoute
+  '/diagnostic/rls': typeof DiagnosticRlsRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/annonces/$id': typeof AuthenticatedAnnoncesIdRoute
@@ -140,6 +148,7 @@ export interface FileRoutesById {
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/bien/$id': typeof BienIdRoute
+  '/diagnostic_/rls': typeof DiagnosticRlsRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/_authenticated/annonces/$id': typeof AuthenticatedAnnoncesIdRoute
@@ -157,6 +166,7 @@ export interface FileRouteTypes {
     | '/.well-known/oauth-protected-resource'
     | '/dashboard'
     | '/bien/$id'
+    | '/diagnostic/rls'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/annonces/$id'
@@ -172,6 +182,7 @@ export interface FileRouteTypes {
     | '/.well-known/oauth-protected-resource'
     | '/dashboard'
     | '/bien/$id'
+    | '/diagnostic/rls'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/annonces/$id'
@@ -188,6 +199,7 @@ export interface FileRouteTypes {
     | '/.well-known/oauth-protected-resource'
     | '/_authenticated/dashboard'
     | '/bien/$id'
+    | '/diagnostic_/rls'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/_authenticated/annonces/$id'
@@ -204,6 +216,7 @@ export interface RootRouteChildren {
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   BienIdRoute: typeof BienIdRoute
+  DiagnosticRlsRoute: typeof DiagnosticRlsRoute
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
   Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
 }
@@ -280,6 +293,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BienIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/diagnostic_/rls': {
+      id: '/diagnostic_/rls'
+      path: '/diagnostic/rls'
+      fullPath: '/diagnostic/rls'
+      preLoaderRoute: typeof DiagnosticRlsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/.lovable/oauth/consent': {
       id: '/.lovable/oauth/consent'
       path: '/.lovable/oauth/consent'
@@ -337,6 +357,7 @@ const rootRouteChildren: RootRouteChildren = {
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
   BienIdRoute: BienIdRoute,
+  DiagnosticRlsRoute: DiagnosticRlsRoute,
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
   Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
 }
