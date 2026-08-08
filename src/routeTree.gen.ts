@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as DiagnosticRouteImport } from './routes/diagnostic'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as RechercheRouteImport } from './routes/recherche'
 import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
@@ -35,6 +36,11 @@ const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DiagnosticRoute = DiagnosticRouteImport.update({
+  id: '/diagnostic',
+  path: '/diagnostic',
   getParentRoute: () => rootRouteImport,
 } as any)
 const McpRoute = McpRouteImport.update({
@@ -95,6 +101,7 @@ const AuthenticatedAnnoncesNouvelleRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/diagnostic': typeof DiagnosticRoute
   '/mcp': typeof McpRoute
   '/recherche': typeof RechercheRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
@@ -109,6 +116,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/diagnostic': typeof DiagnosticRoute
   '/mcp': typeof McpRoute
   '/recherche': typeof RechercheRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
@@ -125,6 +133,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/diagnostic': typeof DiagnosticRoute
   '/mcp': typeof McpRoute
   '/recherche': typeof RechercheRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
@@ -141,6 +150,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/diagnostic'
     | '/mcp'
     | '/recherche'
     | '/.mcp/list-tools'
@@ -155,6 +165,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/diagnostic'
     | '/mcp'
     | '/recherche'
     | '/.mcp/list-tools'
@@ -170,6 +181,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/diagnostic'
     | '/mcp'
     | '/recherche'
     | '/.mcp/list-tools'
@@ -186,6 +198,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
+  DiagnosticRoute: typeof DiagnosticRoute
   McpRoute: typeof McpRoute
   RechercheRoute: typeof RechercheRoute
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
@@ -216,6 +229,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/diagnostic': {
+      id: '/diagnostic'
+      path: '/diagnostic'
+      fullPath: '/diagnostic'
+      preLoaderRoute: typeof DiagnosticRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/mcp': {
@@ -310,6 +330,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
+  DiagnosticRoute: DiagnosticRoute,
   McpRoute: McpRoute,
   RechercheRoute: RechercheRoute,
   Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
