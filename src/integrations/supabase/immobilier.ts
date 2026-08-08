@@ -51,7 +51,16 @@ export type ConnectionTestResult = {
 
 /** Petit test de connexion : vérifie l'accès en lecture aux tables attendues. */
 export async function testImmobilierConnection(
-  tables: string[] = ["properties", "cities", "communes", "districts", "profiles"],
+  tables: string[] = [
+    "properties",
+    "profiles",
+    "agencies",
+    "property_categories",
+    "property_types",
+    "listing_types",
+    "amenities",
+    "amenity_categories",
+  ],
 ): Promise<ConnectionTestResult> {
   const base = { url: SUPABASE_URL, projectId: SUPABASE_PROJECT_ID };
 
