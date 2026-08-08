@@ -119,13 +119,35 @@ export async function testImmobilierConnection(
     const { count, error } = await supabase
       .from(table)
       .select("*", { count: "exact", head: true });
+
+    // Deuxième requête : lecture réelle d'une ligne pour valider la policy SELECT anonyme.
+    const sample = await supabase.from(table).select("*").limit(1);
+    const sampleError = sample.error;
+
+    const errorCode = (error?.code ?? sampleError?.code ?? null) as string | null;
+    const errorMessage = error?.message ?? sampleError?.message ?? null;
+
+    let diagnosis = classify(errorCode, errorMessage);
+    const anonSelectAllowed = !sampleError;
+    const sampleRows = sample.data ? sample.data.length : null;
+
+    if (diagnosis === "ok_avec_donnees" && (count ?? 0) === 0 && (sampleRows ?? 0) === 0) {
+      diagnosis = "vide_lecture_autorisee";
+    }
+
     checked.push({
       table,
-      ok: !error,
+      ok: !error && !sampleError,
       count: count ?? null,
-      error: error ? error.message : null,
+      error: errorMessage,
+      errorCode,
+      anonSelectAllowed,
+      sampleRows,
+      diagnosis,
+      hint: DIAGNOSIS_LABEL[diagnosis],
     });
   }
+
 
   return { ...base, ok: checked.some((c) => c.ok), checked, error: null };
 }
