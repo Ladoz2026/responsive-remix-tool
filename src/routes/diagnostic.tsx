@@ -56,19 +56,66 @@ function Diagnostic() {
       {error && <p className="mt-6 text-sm text-destructive">{(error as Error).message}</p>}
 
       {data && (
-        <ul className="mt-6 space-y-2">
-          {data.checked.map((c) => (
-            <li
-              key={c.table}
-              className="flex items-center justify-between rounded-lg border border-border px-4 py-3 text-sm"
-            >
-              <span className="font-medium">{c.table}</span>
-              <span className={c.ok ? "text-primary" : "text-destructive"}>
-                {c.ok ? `OK — ${c.count ?? 0} ligne(s)` : c.error}
-              </span>
-            </li>
-          ))}
-        </ul>
+        <section className="mt-10">
+          <h2 className="text-lg font-semibold">Diagnostic par table</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Distingue une table réellement vide d'un blocage par les policies RLS / permissions
+            anonymes.
+          </p>
+
+          <div className="mt-4 space-y-3">
+            {data.checked.map((c) => {
+              const tone =
+                c.diagnosis === "ok_avec_donnees"
+                  ? "border-primary/40 bg-primary/5"
+                  : c.diagnosis === "vide_lecture_autorisee"
+                    ? "border-border bg-muted/40"
+                    : "border-destructive/40 bg-destructive/10";
+
+              return (
+                <article key={c.table} className={`rounded-lg border p-4 text-sm ${tone}`}>
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <span className="font-medium">{c.table}</span>
+                    <span className="rounded-full border border-border px-2 py-0.5 text-xs">
+                      {c.diagnosis}
+                    </span>
+                  </div>
+
+                  <p className="mt-2 text-muted-foreground">{c.hint}</p>
+
+                  <dl className="mt-3 grid gap-x-4 gap-y-1 text-xs sm:grid-cols-2">
+                    <div className="flex justify-between gap-2">
+                      <dt className="text-muted-foreground">Lecture anonyme (SELECT)</dt>
+                      <dd className={c.anonSelectAllowed ? "text-primary" : "text-destructive"}>
+                        {c.anonSelectAllowed ? "autorisée" : "refusée"}
+                      </dd>
+                    </div>
+                    <div className="flex justify-between gap-2">
+                      <dt className="text-muted-foreground">Lignes (count exact)</dt>
+                      <dd>{c.count ?? "—"}</dd>
+                    </div>
+                    <div className="flex justify-between gap-2">
+                      <dt className="text-muted-foreground">Échantillon lu</dt>
+                      <dd>{c.sampleRows ?? "—"}</dd>
+                    </div>
+                    <div className="flex justify-between gap-2">
+                      <dt className="text-muted-foreground">Code erreur</dt>
+                      <dd>
+                        <code>{c.errorCode ?? "—"}</code>
+                      </dd>
+                    </div>
+                  </dl>
+
+                  {c.error && (
+                    <p className="mt-3 rounded border border-destructive/30 bg-background/60 p-2 text-xs text-destructive">
+                      {c.error}
+                    </p>
+                  )}
+                </article>
+              );
+            })}
+          </div>
+        </section>
       )}
     </main>
   );

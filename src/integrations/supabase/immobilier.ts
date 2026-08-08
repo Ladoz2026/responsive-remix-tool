@@ -41,13 +41,52 @@ export function getImmobilierClient(): SupabaseClient {
   return _client;
 }
 
+export type TableDiagnosis =
+  | "ok_avec_donnees"
+  | "vide_lecture_autorisee"
+  | "rls_bloque"
+  | "table_absente"
+  | "erreur_inconnue";
+
+export type TableCheck = {
+  table: string;
+  ok: boolean;
+  count: number | null;
+  error: string | null;
+  errorCode: string | null;
+  /** true si la lecture anonyme (SELECT) est autorisée par les policies */
+  anonSelectAllowed: boolean;
+  /** nombre de lignes réellement lisibles en anonyme (0 ou 1 sur un échantillon) */
+  sampleRows: number | null;
+  diagnosis: TableDiagnosis;
+  hint: string;
+};
+
 export type ConnectionTestResult = {
   ok: boolean;
   url: string;
   projectId: string;
-  checked: { table: string; ok: boolean; count: number | null; error: string | null }[];
+  checked: TableCheck[];
   error: string | null;
 };
+
+const DIAGNOSIS_LABEL: Record<TableDiagnosis, string> = {
+  ok_avec_donnees: "Lecture anonyme OK, données présentes",
+  vide_lecture_autorisee: "Lecture anonyme autorisée mais table vide (aucune donnée)",
+  rls_bloque: "Bloqué par les policies RLS / permissions (aucun GRANT ou policy pour anon)",
+  table_absente: "Table introuvable ou non exposée par l'API",
+  erreur_inconnue: "Erreur inattendue — voir le message Supabase",
+};
+
+function classify(errorCode: string | null, errorMessage: string | null): TableDiagnosis {
+  if (!errorCode && !errorMessage) return "ok_avec_donnees";
+  const msg = (errorMessage ?? "").toLowerCase();
+  if (errorCode === "42501" || msg.includes("permission denied") || msg.includes("row-level security"))
+    return "rls_bloque";
+  if (errorCode === "PGRST205" || errorCode === "42P01" || msg.includes("does not exist"))
+    return "table_absente";
+  return "erreur_inconnue";
+}
 
 /** Petit test de connexion : vérifie l'accès en lecture aux tables attendues. */
 export async function testImmobilierConnection(
@@ -80,13 +119,35 @@ export async function testImmobilierConnection(
     const { count, error } = await supabase
       .from(table)
       .select("*", { count: "exact", head: true });
+
+    // Deuxième requête : lecture réelle d'une ligne pour valider la policy SELECT anonyme.
+    const sample = await supabase.from(table).select("*").limit(1);
+    const sampleError = sample.error;
+
+    const errorCode = (error?.code ?? sampleError?.code ?? null) as string | null;
+    const errorMessage = error?.message ?? sampleError?.message ?? null;
+
+    let diagnosis = classify(errorCode, errorMessage);
+    const anonSelectAllowed = !sampleError;
+    const sampleRows = sample.data ? sample.data.length : null;
+
+    if (diagnosis === "ok_avec_donnees" && (count ?? 0) === 0 && (sampleRows ?? 0) === 0) {
+      diagnosis = "vide_lecture_autorisee";
+    }
+
     checked.push({
       table,
-      ok: !error,
+      ok: !error && !sampleError,
       count: count ?? null,
-      error: error ? error.message : null,
+      error: errorMessage,
+      errorCode,
+      anonSelectAllowed,
+      sampleRows,
+      diagnosis,
+      hint: DIAGNOSIS_LABEL[diagnosis],
     });
   }
+
 
   return { ...base, ok: checked.some((c) => c.ok), checked, error: null };
 }
