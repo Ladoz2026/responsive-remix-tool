@@ -1,10 +1,18 @@
 import { Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { featuredQuery } from "@/lib/property-queries";
-import { PropertyCard, type PropertyCardData } from "@/components/site/PropertyCard";
+import {
+  buildLabels,
+  featuredPropertiesQuery,
+  referenceQuery,
+  toCardData,
+} from "@/lib/immobilier-queries";
+import { PropertyCard } from "@/components/site/PropertyCard";
 
 export function Properties() {
-  const { data, isLoading } = useQuery(featuredQuery);
+  const { data, isLoading, error } = useQuery(featuredPropertiesQuery);
+  const { data: reference } = useQuery(referenceQuery);
+  const labels = buildLabels(reference);
+  const items = (data ?? []).map((row) => toCardData(row, labels));
 
   return (
     <section id="properties" className="bg-secondary/60 py-24">
@@ -20,14 +28,16 @@ export function Properties() {
         </div>
 
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {(data ?? []).map((p) => (
-            <PropertyCard key={p.id} property={p as PropertyCardData} />
+          {items.map((p) => (
+            <PropertyCard key={p.id} property={p} />
           ))}
         </div>
 
-        {!isLoading && (data?.length ?? 0) === 0 && (
+        {!isLoading && items.length === 0 && (
           <p className="mt-10 rounded-3xl border border-border bg-card p-10 text-center text-muted-foreground">
-            Aucune annonce publiée pour le moment.
+            {error
+              ? "Impossible de charger les annonces pour le moment."
+              : "Aucune annonce publiée pour le moment."}
           </p>
         )}
 
