@@ -16,13 +16,19 @@ export type PropertyCardData = {
   bathrooms: number;
   surface_m2: number | null;
   images: string[] | null;
+  /** URL déjà résolue (base immobilier : property_images.url) */
+  image_url?: string | null;
+  /** Libellé issu de property_types.name_fr */
+  type_label?: string | null;
+  /** Libellé issu de listing_types.name_fr */
+  transaction_label?: string | null;
   is_verified: boolean;
   is_featured: boolean;
 };
 
 export function PropertyCard({ property }: { property: PropertyCardData }) {
-  const urls = useSignedImages(property.images ?? []);
-  const cover = urls[0];
+  const urls = useSignedImages(property.image_url ? [] : (property.images ?? []));
+  const cover = property.image_url || urls[0];
 
   return (
     <article className="group overflow-hidden rounded-3xl bg-card shadow-soft transition-shadow hover:shadow-elevated">
@@ -42,7 +48,7 @@ export function PropertyCard({ property }: { property: PropertyCardData }) {
           )}
           <div className="absolute inset-x-0 top-0 flex items-start justify-between gap-2 p-4">
             <span className="rounded-full gold-gradient px-3 py-1 text-xs font-bold text-accent-foreground">
-              {property.transaction === "location" ? "Location" : "Vente"}
+              {property.transaction_label ?? (property.transaction === "location" ? "Location" : "Vente")}
             </span>
             {property.is_verified && (
               <span className="inline-flex items-center gap-1 rounded-full bg-card/90 px-3 py-1 text-xs font-semibold text-foreground">
@@ -65,7 +71,7 @@ export function PropertyCard({ property }: { property: PropertyCardData }) {
           </h3>
 
           <div className="mt-4 flex flex-wrap gap-4 text-sm text-muted-foreground">
-            <span>{typeLabel(property.property_type)}</span>
+            <span>{property.type_label ?? typeLabel(property.property_type)}</span>
             {property.bedrooms > 0 && (
               <span className="inline-flex items-center gap-1.5">
                 <BedDouble className="h-4 w-4" /> {property.bedrooms}
