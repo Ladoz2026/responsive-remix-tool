@@ -2,8 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { Search } from "lucide-react";
-import { referenceQuery, type SearchFilters } from "@/lib/property-queries";
-import { PROPERTY_TYPES, TRANSACTIONS } from "@/lib/format";
+import { referenceQuery, type SearchFilters } from "@/lib/immobilier-queries";
 
 const fieldClass =
   "w-full min-w-0 rounded-xl border border-border bg-card px-3 py-2.5 text-sm text-foreground outline-none focus:border-gold";
@@ -22,16 +21,26 @@ export function SearchForm({
   const set = (key: keyof SearchFilters, value: string) =>
     setFilters((f) => ({
       ...f,
-      [key]: value === "" ? undefined : key === "minPrice" || key === "maxPrice" ? Number(value) : value,
+      [key]:
+        value === ""
+          ? undefined
+          : key === "minPrice" || key === "maxPrice"
+            ? Number(value)
+            : value,
+      // cascades : un changement de niveau réinitialise les niveaux inférieurs
       ...(key === "cityId" ? { communeId: undefined, districtId: undefined } : {}),
       ...(key === "communeId" ? { districtId: undefined } : {}),
+      ...(key === "categoryId" ? { propertyType: undefined } : {}),
     }));
 
   const communes = (data?.communes ?? []).filter(
-    (c) => !filters.cityId || c.city_id === filters.cityId,
+    (c) => !filters.cityId || c.parent === filters.cityId,
   );
   const districts = (data?.districts ?? []).filter(
-    (d) => !filters.communeId || d.commune_id === filters.communeId,
+    (d) => !filters.communeId || d.parent === filters.communeId,
+  );
+  const propertyTypes = (data?.propertyTypes ?? []).filter(
+    (t) => !filters.categoryId || t.parent === filters.categoryId,
   );
 
   return (
@@ -49,9 +58,9 @@ export function SearchForm({
           onChange={(e) => set("transaction", e.target.value)}
         >
           <option value="">Transaction</option>
-          {TRANSACTIONS.map((t) => (
-            <option key={t.value} value={t.value}>
-              {t.label}
+          {(data?.listingTypes ?? []).map((t) => (
+            <option key={t.id} value={t.code}>
+              {t.name}
             </option>
           ))}
         </select>
@@ -63,7 +72,7 @@ export function SearchForm({
         >
           <option value="">Catégorie</option>
           {(data?.categories ?? []).map((c) => (
-            <option key={c.id} value={c.id}>
+            <option key={c.id} value={c.code}>
               {c.name}
             </option>
           ))}
@@ -75,9 +84,9 @@ export function SearchForm({
           onChange={(e) => set("propertyType", e.target.value)}
         >
           <option value="">Type de bien</option>
-          {PROPERTY_TYPES.map((t) => (
-            <option key={t.value} value={t.value}>
-              {t.label}
+          {propertyTypes.map((t) => (
+            <option key={t.id} value={t.code}>
+              {t.name}
             </option>
           ))}
         </select>
@@ -99,8 +108,9 @@ export function SearchForm({
           className={fieldClass}
           value={filters.communeId ?? ""}
           onChange={(e) => set("communeId", e.target.value)}
+          disabled={!filters.cityId}
         >
-          <option value="">Commune</option>
+          <option value="">{filters.cityId ? "Commune" : "Commune (choisir une ville)"}</option>
           {communes.map((c) => (
             <option key={c.id} value={c.id}>
               {c.name}
@@ -112,8 +122,11 @@ export function SearchForm({
           className={fieldClass}
           value={filters.districtId ?? ""}
           onChange={(e) => set("districtId", e.target.value)}
+          disabled={!filters.communeId}
         >
-          <option value="">Quartier</option>
+          <option value="">
+            {filters.communeId ? "Quartier" : "Quartier (choisir une commune)"}
+          </option>
           {districts.map((d) => (
             <option key={d.id} value={d.id}>
               {d.name}
@@ -124,7 +137,7 @@ export function SearchForm({
         <input
           type="number"
           min={0}
-          placeholder="Prix min"
+          placeholder="Prix min (FCFA)"
           className={fieldClass}
           value={filters.minPrice ?? ""}
           onChange={(e) => set("minPrice", e.target.value)}
@@ -132,7 +145,7 @@ export function SearchForm({
         <input
           type="number"
           min={0}
-          placeholder="Prix max"
+          placeholder="Prix max (FCFA)"
           className={fieldClass}
           value={filters.maxPrice ?? ""}
           onChange={(e) => set("maxPrice", e.target.value)}
