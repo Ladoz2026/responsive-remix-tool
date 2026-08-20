@@ -16,13 +16,19 @@ export type PropertyCardData = {
   bathrooms: number;
   surface_m2: number | null;
   images: string[] | null;
+  /** URL déjà résolue (base immobilier : property_images.url) */
+  image_url?: string | null;
+  /** Libellé issu de property_types.name_fr */
+  type_label?: string | null;
+  /** Libellé issu de listing_types.name_fr */
+  transaction_label?: string | null;
   is_verified: boolean;
   is_featured: boolean;
 };
 
 export function PropertyCard({ property }: { property: PropertyCardData }) {
-  const urls = useSignedImages(property.images ?? []);
-  const cover = urls[0];
+  const urls = useSignedImages(property.image_url ? [] : (property.images ?? []));
+  const cover = property.image_url || urls[0];
 
   return (
     <article className="group overflow-hidden rounded-3xl bg-card shadow-soft transition-shadow hover:shadow-elevated">
