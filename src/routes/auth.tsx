@@ -2,7 +2,7 @@ import { useState } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { Crown } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/integrations/supabase/app-client";
 
 const title = "Connexion — SeLoger CI";
 const description = "Connectez-vous à votre espace agence SeLoger CI pour gérer vos annonces.";

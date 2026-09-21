@@ -3,8 +3,14 @@ import { useQuery } from "@tanstack/react-query";
 import { Header } from "@/components/site/Header";
 import { CtaFooter } from "@/components/site/CtaFooter";
 import { SearchForm } from "@/components/site/SearchForm";
-import { PropertyCard, type PropertyCardData } from "@/components/site/PropertyCard";
-import { propertiesQuery, type SearchFilters } from "@/lib/property-queries";
+import { PropertyCard } from "@/components/site/PropertyCard";
+import {
+  buildLabels,
+  propertiesSearchQuery,
+  referenceQuery,
+  toCardData,
+  type SearchFilters,
+} from "@/lib/immobilier-queries";
 
 const title = "Recherche de biens — SeLoger CI";
 const description =
@@ -37,7 +43,10 @@ export const Route = createFileRoute("/recherche")({
 
 function SearchPage() {
   const filters = Route.useSearch();
-  const { data, isLoading } = useQuery(propertiesQuery(filters));
+  const { data, isLoading, error } = useQuery(propertiesSearchQuery(filters));
+  const { data: reference } = useQuery(referenceQuery);
+  const labels = buildLabels(reference);
+  const items = (data ?? []).map((row) => toCardData(row, labels));
 
   return (
     <div className="min-h-screen bg-background font-sans">
@@ -55,18 +64,20 @@ function SearchPage() {
         </div>
 
         <p className="mt-8 text-sm font-semibold text-muted-foreground">
-          {isLoading ? "Chargement…" : `${data?.length ?? 0} bien(s) trouvé(s)`}
+          {isLoading ? "Chargement…" : `${items.length} bien(s) trouvé(s)`}
         </p>
 
         <div className="mt-4 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {(data ?? []).map((p) => (
-            <PropertyCard key={p.id} property={p as PropertyCardData} />
+          {items.map((p) => (
+            <PropertyCard key={p.id} property={p} />
           ))}
         </div>
 
-        {!isLoading && (data?.length ?? 0) === 0 && (
+        {!isLoading && items.length === 0 && (
           <div className="mt-10 rounded-3xl border border-border bg-card p-10 text-center text-muted-foreground">
-            Aucun bien ne correspond à ces critères pour le moment.
+            {error
+              ? "Impossible de charger les annonces pour le moment."
+              : "Aucun bien ne correspond à ces critères pour le moment."}
           </div>
         )}
       </main>
