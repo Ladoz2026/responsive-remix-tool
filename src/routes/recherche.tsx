@@ -43,7 +43,10 @@ export const Route = createFileRoute("/recherche")({
 
 function SearchPage() {
   const filters = Route.useSearch();
-  const { data, isLoading } = useQuery(propertiesQuery(filters));
+  const { data, isLoading, error } = useQuery(propertiesSearchQuery(filters));
+  const { data: reference } = useQuery(referenceQuery);
+  const labels = buildLabels(reference);
+  const items = (data ?? []).map((row) => toCardData(row, labels));
 
   return (
     <div className="min-h-screen bg-background font-sans">
