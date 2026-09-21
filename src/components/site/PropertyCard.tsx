@@ -31,11 +31,9 @@ export type PropertyCardData = {
 export function PropertyCard({ property }: { property: PropertyCardData }) {
   const urls = useSignedImages(property.image_url ? [] : (property.images ?? []));
   const cover = property.image_url || urls[0];
-  const Wrapper = property.detail_path === null ? "div" : Link;
+  const noLink = property.detail_path === null;
 
-  return (
-    <article className="group overflow-hidden rounded-3xl bg-card shadow-soft transition-shadow hover:shadow-elevated">
-      <Wrapper {...(property.detail_path === null ? {} : { to: "/bien/$id", params: { id: property.id } })} className="block">
+  const body = (
         <div className="relative">
           {cover ? (
             <img
