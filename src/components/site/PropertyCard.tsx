@@ -90,7 +90,18 @@ export function PropertyCard({ property }: { property: PropertyCardData }) {
             ) : null}
           </div>
         </div>
-      </Wrapper>
+    </>
+  );
+
+  return (
+    <article className="group overflow-hidden rounded-3xl bg-card shadow-soft transition-shadow hover:shadow-elevated">
+      {noLink ? (
+        <div className="block">{body}</div>
+      ) : (
+        <Link to="/bien/$id" params={{ id: property.id }} className="block">
+          {body}
+        </Link>
+      )}
     </article>
   );
 }
