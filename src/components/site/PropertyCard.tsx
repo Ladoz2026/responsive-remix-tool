@@ -34,6 +34,7 @@ export function PropertyCard({ property }: { property: PropertyCardData }) {
   const noLink = property.detail_path === null;
 
   const body = (
+    <>
         <div className="relative">
           {cover ? (
             <img
