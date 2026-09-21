@@ -64,18 +64,20 @@ function SearchPage() {
         </div>
 
         <p className="mt-8 text-sm font-semibold text-muted-foreground">
-          {isLoading ? "Chargement…" : `${data?.length ?? 0} bien(s) trouvé(s)`}
+          {isLoading ? "Chargement…" : `${items.length} bien(s) trouvé(s)`}
         </p>
 
         <div className="mt-4 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {(data ?? []).map((p) => (
-            <PropertyCard key={p.id} property={p as PropertyCardData} />
+          {items.map((p) => (
+            <PropertyCard key={p.id} property={p} />
           ))}
         </div>
 
-        {!isLoading && (data?.length ?? 0) === 0 && (
+        {!isLoading && items.length === 0 && (
           <div className="mt-10 rounded-3xl border border-border bg-card p-10 text-center text-muted-foreground">
-            Aucun bien ne correspond à ces critères pour le moment.
+            {error
+              ? "Impossible de charger les annonces pour le moment."
+              : "Aucun bien ne correspond à ces critères pour le moment."}
           </div>
         )}
       </main>
