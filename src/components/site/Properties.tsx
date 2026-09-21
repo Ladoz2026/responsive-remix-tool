@@ -1,18 +1,10 @@
 import { Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import {
-  buildLabels,
-  featuredPropertiesQuery,
-  referenceQuery,
-  toCardData,
-} from "@/lib/immobilier-queries";
+import { wpAnnoncesQuery } from "@/lib/wordpress-annonces";
 import { PropertyCard } from "@/components/site/PropertyCard";
 
 export function Properties() {
-  const { data, isLoading, error } = useQuery(featuredPropertiesQuery);
-  const { data: reference } = useQuery(referenceQuery);
-  const labels = buildLabels(reference);
-  const items = (data ?? []).map((row) => toCardData(row, labels));
+  const { data: items, isLoading, error } = useQuery(wpAnnoncesQuery);
 
   return (
     <section id="properties" className="bg-secondary/60 py-24">
@@ -27,13 +19,26 @@ export function Properties() {
           </p>
         </div>
 
-        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {items.map((p) => (
-            <PropertyCard key={p.id} property={p} />
-          ))}
-        </div>
-
-        {!isLoading && items.length === 0 && (
+        {isLoading ? (
+          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="overflow-hidden rounded-3xl bg-card shadow-soft">
+                <div className="h-52 w-full animate-pulse bg-secondary" />
+                <div className="space-y-3 p-5">
+                  <div className="h-5 w-2/5 animate-pulse rounded bg-secondary" />
+                  <div className="h-4 w-3/5 animate-pulse rounded bg-secondary" />
+                  <div className="h-4 w-4/5 animate-pulse rounded bg-secondary" />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : items && items.length > 0 ? (
+          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {items.map((p) => (
+              <PropertyCard key={p.id} property={p} />
+            ))}
+          </div>
+        ) : (
           <p className="mt-10 rounded-3xl border border-border bg-card p-10 text-center text-muted-foreground">
             {error
               ? "Impossible de charger les annonces pour le moment."
