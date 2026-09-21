@@ -92,7 +92,7 @@ export function PropertyCard({ property }: { property: PropertyCardData }) {
             ) : null}
           </div>
         </div>
-      </Link>
+      </Wrapper>
     </article>
   );
 }

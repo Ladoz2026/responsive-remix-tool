@@ -54,6 +54,7 @@ export function wpAnnonceToCard(a: WpAnnonce): PropertyCardData {
     image_url: featuredImage(a),
     type_label: acf.type_bien || null,
     transaction_label: acf.type_transaction || null,
+    detail_path: null,
     is_verified: (acf.badges ?? []).includes("Vérifié"),
     is_featured: (acf.badges ?? []).includes("À la une"),
   };
