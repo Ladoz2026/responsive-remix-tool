@@ -8,7 +8,7 @@ import { CtaFooter } from "@/components/site/CtaFooter";
 import { useSignedImages } from "@/hooks/useSignedImages";
 import { propertyQuery } from "@/lib/property-queries";
 import { formatPrice, typeLabel } from "@/lib/format";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/integrations/supabase/app-client";
 
 export const Route = createFileRoute("/bien/$id")({
   head: () => ({

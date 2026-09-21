@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { Header } from "@/components/site/Header";
 import { myLeadsQuery, myPropertiesQuery } from "@/lib/property-queries";
 import { formatDate, formatPrice, typeLabel } from "@/lib/format";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/integrations/supabase/app-client";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({

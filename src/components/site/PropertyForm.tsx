@@ -3,7 +3,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { X } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/integrations/supabase/app-client";
 import { referenceQuery } from "@/lib/property-queries";
 import { PROPERTY_TYPES, TRANSACTIONS } from "@/lib/format";
 import { uploadPropertyImages } from "@/lib/media";
