@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import { referenceQuery } from "@/lib/property-queries";
+import { referenceQuery } from "@/lib/immobilier-queries";
 import apartment from "@/assets/prop-apartment.jpg";
 import villa from "@/assets/prop-villa.jpg";
 import house from "@/assets/prop-house.jpg";
@@ -41,7 +41,7 @@ export function Categories() {
           <Link
             key={c.id}
             to="/recherche"
-            search={{ categoryId: c.id } as never}
+            search={{ categoryId: c.code } as never}
             className="group relative block overflow-hidden rounded-3xl shadow-soft"
           >
             <img
