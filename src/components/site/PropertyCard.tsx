@@ -22,6 +22,8 @@ export type PropertyCardData = {
   type_label?: string | null;
   /** Libellé issu de listing_types.name_fr */
   transaction_label?: string | null;
+  /** Chemin de la page détail ; null = carte non cliquable (ex. annonces WordPress) */
+  detail_path?: string | null;
   is_verified: boolean;
   is_featured: boolean;
 };
@@ -29,10 +31,10 @@ export type PropertyCardData = {
 export function PropertyCard({ property }: { property: PropertyCardData }) {
   const urls = useSignedImages(property.image_url ? [] : (property.images ?? []));
   const cover = property.image_url || urls[0];
+  const noLink = property.detail_path === null;
 
-  return (
-    <article className="group overflow-hidden rounded-3xl bg-card shadow-soft transition-shadow hover:shadow-elevated">
-      <Link to="/bien/$id" params={{ id: property.id }} className="block">
+  const body = (
+    <>
         <div className="relative">
           {cover ? (
             <img
@@ -89,7 +91,18 @@ export function PropertyCard({ property }: { property: PropertyCardData }) {
             ) : null}
           </div>
         </div>
-      </Link>
+    </>
+  );
+
+  return (
+    <article className="group overflow-hidden rounded-3xl bg-card shadow-soft transition-shadow hover:shadow-elevated">
+      {noLink ? (
+        <div className="block">{body}</div>
+      ) : (
+        <Link to="/bien/$id" params={{ id: property.id }} className="block">
+          {body}
+        </Link>
+      )}
     </article>
   );
 }
