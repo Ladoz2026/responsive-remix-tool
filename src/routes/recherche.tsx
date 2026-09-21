@@ -3,8 +3,14 @@ import { useQuery } from "@tanstack/react-query";
 import { Header } from "@/components/site/Header";
 import { CtaFooter } from "@/components/site/CtaFooter";
 import { SearchForm } from "@/components/site/SearchForm";
-import { PropertyCard, type PropertyCardData } from "@/components/site/PropertyCard";
-import { propertiesQuery, type SearchFilters } from "@/lib/property-queries";
+import { PropertyCard } from "@/components/site/PropertyCard";
+import {
+  buildLabels,
+  propertiesSearchQuery,
+  referenceQuery,
+  toCardData,
+  type SearchFilters,
+} from "@/lib/immobilier-queries";
 
 const title = "Recherche de biens — SeLoger CI";
 const description =
