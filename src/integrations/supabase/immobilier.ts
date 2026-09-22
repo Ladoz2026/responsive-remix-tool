@@ -15,14 +15,13 @@ const FALLBACK_URL = "https://jilihrowleimacfrujgb.supabase.co";
 const FALLBACK_KEY = "sb_publishable_IVDWwoPhVQ0Tmsr7OdxX_A_js7D7o99";
 const FALLBACK_PROJECT_ID = "jilihrowleimacfrujgb";
 
-export const SUPABASE_URL =
-  env['VITE_IMMOBILIER_SUPABASE_URL'] || env['VITE_SUPABASE_URL'] || FALLBACK_URL;
+// NB : on n'utilise PAS VITE_SUPABASE_* ici — le client applicatif doit
+// pointer exclusivement vers le projet externe « immobilier ».
+export const SUPABASE_URL = env['VITE_IMMOBILIER_SUPABASE_URL'] || FALLBACK_URL;
 export const SUPABASE_PUBLISHABLE_KEY =
-  env['VITE_IMMOBILIER_SUPABASE_PUBLISHABLE_KEY'] ||
-  env['VITE_SUPABASE_PUBLISHABLE_KEY'] ||
-  FALLBACK_KEY;
+  env['VITE_IMMOBILIER_SUPABASE_PUBLISHABLE_KEY'] || FALLBACK_KEY;
 export const SUPABASE_PROJECT_ID =
-  env['VITE_IMMOBILIER_SUPABASE_PROJECT_ID'] || env['VITE_SUPABASE_PROJECT_ID'] || FALLBACK_PROJECT_ID;
+  env['VITE_IMMOBILIER_SUPABASE_PROJECT_ID'] || FALLBACK_PROJECT_ID;
 
 export const isImmobilierConfigured = Boolean(SUPABASE_URL && SUPABASE_PUBLISHABLE_KEY);
 
