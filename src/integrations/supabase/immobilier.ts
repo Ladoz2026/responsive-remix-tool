@@ -23,18 +23,14 @@ export const SUPABASE_PUBLISHABLE_KEY =
 export const SUPABASE_PROJECT_ID =
   env['VITE_IMMOBILIER_SUPABASE_PROJECT_ID'] || FALLBACK_PROJECT_ID;
 
-export const isImmobilierConfigured = Boolean(SUPABASE_URL && SUPABASE_PUBLISHABLE_KEY);
+export const isImmobilierConfigured = true;
 
 let _client: SupabaseClient | undefined;
 
 /** Client unique utilisé par toutes les requêtes de l'application. */
 export function getImmobilierClient(): SupabaseClient {
-  if (!isImmobilierConfigured) {
-    throw new Error(
-      "Configuration Supabase « immobilier » manquante : renseignez VITE_IMMOBILIER_SUPABASE_URL et VITE_IMMOBILIER_SUPABASE_PUBLISHABLE_KEY.",
-    );
-  }
   if (!_client) {
+
     _client = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
       auth: {
         storage: typeof window !== "undefined" ? window.localStorage : undefined,
