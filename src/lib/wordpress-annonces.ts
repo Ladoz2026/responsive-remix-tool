@@ -1,7 +1,9 @@
 import { queryOptions } from "@tanstack/react-query";
 import type { PropertyCardData } from "@/components/site/PropertyCard";
 
-const API_URL = "https://api-seloger-ci.poroinfo.net/wp-json/wp/v2/annonces?_embed&per_page=50";
+// Proxy serveur (/api/annonces) : l'API WordPress n'autorise pas les appels
+// directs depuis le navigateur (CORS limité au domaine de production).
+const API_URL = "/api/annonces";
 
 type WpMedia = { source_url?: string; media_details?: { sizes?: Record<string, { source_url: string }> } };
 
@@ -33,7 +35,7 @@ function featuredImage(a: WpAnnonce): string | null {
   const media = a._embedded?.["wp:featuredmedia"]?.[0];
   if (!media) return null;
   const sizes = media.media_details?.sizes;
-  return sizes?.medium_large?.source_url ?? sizes?.large?.source_url ?? media.source_url ?? null;
+  return sizes?.["medium_large"]?.source_url ?? sizes?.["large"]?.source_url ?? media.source_url ?? null;
 }
 
 export function wpAnnonceToCard(a: WpAnnonce): PropertyCardData {
