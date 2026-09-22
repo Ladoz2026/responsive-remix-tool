@@ -18,6 +18,7 @@ import { Route as RechercheRouteImport } from './routes/recherche'
 import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as ApiAnnoncesRouteImport } from './routes/api/annonces'
 import { Route as BienIdRouteImport } from './routes/bien.$id'
 import { Route as DiagnosticRlsRouteImport } from './routes/diagnostic_.rls'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
@@ -71,6 +72,11 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const ApiAnnoncesRoute = ApiAnnoncesRouteImport.update({
+  id: '/api/annonces',
+  path: '/api/annonces',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BienIdRoute = BienIdRouteImport.update({
   id: '/bien/$id',
   path: '/bien/$id',
@@ -113,6 +119,7 @@ export interface FileRoutesByFullPath {
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/api/annonces': typeof ApiAnnoncesRoute
   '/bien/$id': typeof BienIdRoute
   '/diagnostic/rls': typeof DiagnosticRlsRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
@@ -129,6 +136,7 @@ export interface FileRoutesByTo {
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/api/annonces': typeof ApiAnnoncesRoute
   '/bien/$id': typeof BienIdRoute
   '/diagnostic/rls': typeof DiagnosticRlsRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
@@ -147,6 +155,7 @@ export interface FileRoutesById {
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/api/annonces': typeof ApiAnnoncesRoute
   '/bien/$id': typeof BienIdRoute
   '/diagnostic_/rls': typeof DiagnosticRlsRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
@@ -165,6 +174,7 @@ export interface FileRouteTypes {
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/dashboard'
+    | '/api/annonces'
     | '/bien/$id'
     | '/diagnostic/rls'
     | '/.lovable/oauth/consent'
@@ -181,6 +191,7 @@ export interface FileRouteTypes {
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/dashboard'
+    | '/api/annonces'
     | '/bien/$id'
     | '/diagnostic/rls'
     | '/.lovable/oauth/consent'
@@ -198,6 +209,7 @@ export interface FileRouteTypes {
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/_authenticated/dashboard'
+    | '/api/annonces'
     | '/bien/$id'
     | '/diagnostic_/rls'
     | '/.lovable/oauth/consent'
@@ -215,6 +227,7 @@ export interface RootRouteChildren {
   RechercheRoute: typeof RechercheRoute
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  ApiAnnoncesRoute: typeof ApiAnnoncesRoute
   BienIdRoute: typeof BienIdRoute
   DiagnosticRlsRoute: typeof DiagnosticRlsRoute
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
@@ -286,6 +299,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/api/annonces': {
+      id: '/api/annonces'
+      path: '/api/annonces'
+      fullPath: '/api/annonces'
+      preLoaderRoute: typeof ApiAnnoncesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/bien/$id': {
       id: '/bien/$id'
       path: '/bien/$id'
@@ -356,6 +376,7 @@ const rootRouteChildren: RootRouteChildren = {
   Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
+  ApiAnnoncesRoute: ApiAnnoncesRoute,
   BienIdRoute: BienIdRoute,
   DiagnosticRlsRoute: DiagnosticRlsRoute,
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
