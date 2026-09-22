@@ -33,7 +33,7 @@ function featuredImage(a: WpAnnonce): string | null {
   const media = a._embedded?.["wp:featuredmedia"]?.[0];
   if (!media) return null;
   const sizes = media.media_details?.sizes;
-  return sizes?.medium_large?.source_url ?? sizes?.large?.source_url ?? media.source_url ?? null;
+  return sizes?.["medium_large"]?.source_url ?? sizes?.["large"]?.source_url ?? media.source_url ?? null;
 }
 
 export function wpAnnonceToCard(a: WpAnnonce): PropertyCardData {
