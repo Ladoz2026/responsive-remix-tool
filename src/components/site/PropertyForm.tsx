@@ -1,13 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { X } from "lucide-react";
-import { supabase } from "@/integrations/supabase/app-client";
-import { referenceQuery } from "@/lib/property-queries";
 import { PROPERTY_TYPES, TRANSACTIONS } from "@/lib/format";
 import { uploadPropertyImages } from "@/lib/media";
 import { useSignedImages } from "@/hooks/useSignedImages";
+
+const API_URL = "https://api-seloger-ci.poroinfo.net/wp-json/seloger/v1/annonces";
 
 const field =
   "w-full rounded-xl border border-border bg-background px-3 py-2.5 text-sm text-foreground outline-none focus:border-gold";
@@ -22,16 +21,10 @@ export function PropertyForm({
   initial?: PropertyFormValues;
 }) {
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
-  const { data: ref } = useQuery(referenceQuery);
   const [saving, setSaving] = useState(false);
+  const [done, setDone] = useState(false);
   const [images, setImages] = useState<string[]>(((initial?.['images'] as string[]) ?? []));
-  const [cityId, setCityId] = useState<string>((initial?.['city_id'] as string) ?? "");
-  const [communeId, setCommuneId] = useState<string>((initial?.['commune_id'] as string) ?? "");
   const previews = useSignedImages(images);
-
-  const communes = (ref?.communes ?? []).filter((c) => !cityId || c.city_id === cityId);
-  const districts = (ref?.districts ?? []).filter((d) => !communeId || d.commune_id === communeId);
 
   async function onFiles(files: FileList | null) {
     if (!files || files.length === 0) return;
@@ -47,49 +40,57 @@ export function PropertyForm({
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const f = new FormData(e.currentTarget);
-    const city = ref?.cities.find((c) => c.id === f.get("city_id"));
-    const district = ref?.districts.find((d) => d.id === f.get("district_id"));
 
     const payload = {
-      owner_id: userId,
       title: String(f.get("title")).trim().slice(0, 160),
       description: String(f.get("description") ?? "").slice(0, 5000),
-      property_type: String(f.get("property_type")),
-      transaction: String(f.get("transaction")),
-      price: Number(f.get("price")),
-      currency: "FCFA",
-      city: city?.name ?? String(f.get("city_text") ?? "Abidjan"),
-      district: district?.name ?? null,
-      address: String(f.get("address") ?? "") || null,
-      city_id: (f.get("city_id") as string) || null,
-      commune_id: (f.get("commune_id") as string) || null,
-      district_id: (f.get("district_id") as string) || null,
-      category_id: (f.get("category_id") as string) || null,
-      surface_m2: f.get("surface_m2") ? Number(f.get("surface_m2")) : null,
-      bedrooms: Number(f.get("bedrooms") ?? 0),
-      bathrooms: Number(f.get("bathrooms") ?? 0),
-      has_pool: f.get("has_pool") === "on",
-      has_garage: f.get("has_garage") === "on",
-      has_garden: f.get("has_garden") === "on",
-      has_ac: f.get("has_ac") === "on",
-      is_furnished: f.get("is_furnished") === "on",
-      images,
-      status: String(f.get("status")),
+      type_bien: String(f.get("property_type")),
+      type_transaction: String(f.get("transaction")),
+      prix: String(f.get("price")),
+      ville: String(f.get("ville") ?? "Abidjan"),
+      quartier: String(f.get("quartier") ?? ""),
+      surface_m2: String(f.get("surface_m2") ?? ""),
+      chambres: String(f.get("bedrooms") ?? "0"),
+      salles_de_bain: String(f.get("bathrooms") ?? "0"),
+      photos_urls: images.join(","),
+      contact_nom: String(f.get("contact_nom") ?? ""),
+      contact_telephone: String(f.get("contact_telephone") ?? ""),
+      contact_email: String(f.get("contact_email") ?? ""),
     };
 
     setSaving(true);
-    const res = initial?.id
-      ? await supabase.from("properties").update(payload as never).eq("id", initial.id)
-      : await supabase.from("properties").insert(payload as never);
-    setSaving(false);
-
-    if (res.error) {
-      toast.error(res.error.message);
-      return;
+    try {
+      const res = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) throw new Error(data.message || "Erreur");
+      setDone(true);
+      toast.success("Annonce envoyée pour validation !");
+    } catch {
+      toast.error("Une erreur est survenue, réessayez.");
+    } finally {
+      setSaving(false);
     }
-    await queryClient.invalidateQueries({ queryKey: ["my-properties"] });
-    toast.success(initial?.id ? "Annonce mise à jour" : "Annonce créée");
-    navigate({ to: "/dashboard" });
+  }
+
+  if (done) {
+    return (
+      <div className="rounded-3xl border border-border bg-card p-10 text-center">
+        <h2 className="text-xl font-bold text-foreground">Merci !</h2>
+        <p className="mt-3 text-muted-foreground">
+          Votre annonce a été envoyée. Elle sera publiée après validation par notre équipe (sous 24h).
+        </p>
+        <button
+          onClick={() => navigate({ to: "/dashboard" })}
+          className="mt-6 rounded-full gold-gradient px-6 py-3 text-sm font-bold text-accent-foreground shadow-gold"
+        >
+          Retour à mon espace
+        </button>
+      </div>
+    );
   }
 
   return (
@@ -111,38 +112,26 @@ export function PropertyForm({
           placeholder="Description détaillée"
           className={field}
         />
-        <div className="grid gap-4 sm:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-2">
           <select
             name="transaction"
-            defaultValue={(initial?.['transaction'] as string) ?? "vente"}
+            defaultValue={(initial?.['transaction'] as string) ?? "Vente"}
             className={field}
           >
             {TRANSACTIONS.map((t) => (
-              <option key={t.value} value={t.value}>
+              <option key={t.value} value={t.label ?? t.value}>
                 {t.label}
               </option>
             ))}
           </select>
           <select
             name="property_type"
-            defaultValue={(initial?.['property_type'] as string) ?? "appartement"}
+            defaultValue={(initial?.['property_type'] as string) ?? "Appartement"}
             className={field}
           >
             {PROPERTY_TYPES.map((t) => (
-              <option key={t.value} value={t.value}>
+              <option key={t.value} value={t.label ?? t.value}>
                 {t.label}
-              </option>
-            ))}
-          </select>
-          <select
-            name="category_id"
-            defaultValue={(initial?.['category_id'] as string) ?? ""}
-            className={field}
-          >
-            <option value="">Catégorie</option>
-            {(ref?.categories ?? []).map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name}
               </option>
             ))}
           </select>
@@ -186,77 +175,9 @@ export function PropertyForm({
 
       <div className="grid gap-4 rounded-3xl border border-border bg-card p-6">
         <h2 className="text-lg font-bold text-foreground">Localisation</h2>
-        <div className="grid gap-4 sm:grid-cols-3">
-          <select
-            name="city_id"
-            value={cityId}
-            onChange={(e) => {
-              setCityId(e.target.value);
-              setCommuneId("");
-            }}
-            className={field}
-          >
-            <option value="">Ville</option>
-            {(ref?.cities ?? []).map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name}
-              </option>
-            ))}
-          </select>
-          <select
-            name="commune_id"
-            value={communeId}
-            onChange={(e) => setCommuneId(e.target.value)}
-            className={field}
-          >
-            <option value="">Commune</option>
-            {communes.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name}
-              </option>
-            ))}
-          </select>
-          <select
-            name="district_id"
-            defaultValue={(initial?.['district_id'] as string) ?? ""}
-            className={field}
-          >
-            <option value="">Quartier</option>
-            {districts.map((d) => (
-              <option key={d.id} value={d.id}>
-                {d.name}
-              </option>
-            ))}
-          </select>
-        </div>
-        <input
-          name="address"
-          defaultValue={(initial?.['address'] as string) ?? ""}
-          placeholder="Adresse"
-          className={field}
-        />
-      </div>
-
-      <div className="grid gap-4 rounded-3xl border border-border bg-card p-6">
-        <h2 className="text-lg font-bold text-foreground">Équipements</h2>
-        <div className="flex flex-wrap gap-5 text-sm text-foreground">
-          {[
-            ["has_pool", "Piscine"],
-            ["has_garage", "Garage"],
-            ["has_garden", "Jardin"],
-            ["has_ac", "Climatisation"],
-            ["is_furnished", "Meublé"],
-          ].map(([name, label]) => (
-            <label key={name} className="inline-flex items-center gap-2">
-              <input
-                type="checkbox"
-                name={name}
-                defaultChecked={Boolean(initial?.[name!])}
-                className="h-4 w-4 accent-[var(--gold)]"
-              />
-              {label}
-            </label>
-          ))}
+        <div className="grid gap-4 sm:grid-cols-2">
+          <input name="ville" defaultValue="Abidjan" placeholder="Ville" className={field} />
+          <input name="quartier" placeholder="Quartier (ex: Cocody)" className={field} />
         </div>
       </div>
 
@@ -288,22 +209,22 @@ export function PropertyForm({
         )}
       </div>
 
+      <div className="grid gap-4 rounded-3xl border border-border bg-card p-6">
+        <h2 className="text-lg font-bold text-foreground">Vos coordonnées</h2>
+        <input name="contact_nom" required placeholder="Votre nom" className={field} />
+        <div className="grid gap-4 sm:grid-cols-2">
+          <input name="contact_telephone" required placeholder="Téléphone" className={field} />
+          <input name="contact_email" type="email" placeholder="Email" className={field} />
+        </div>
+      </div>
+
       <div className="flex flex-wrap items-center gap-4">
-        <select
-          name="status"
-          defaultValue={(initial?.['status'] as string) ?? "publie"}
-          className={`${field} sm:w-56`}
-        >
-          <option value="brouillon">Brouillon</option>
-          <option value="publie">Publiée</option>
-          <option value="archive">Archivée</option>
-        </select>
         <button
           type="submit"
           disabled={saving}
           className="rounded-full gold-gradient px-6 py-3 text-sm font-bold text-accent-foreground shadow-gold disabled:opacity-60"
         >
-          {saving ? "Enregistrement…" : "Enregistrer l'annonce"}
+          {saving ? "Envoi en cours…" : "Envoyer pour validation"}
         </button>
       </div>
     </form>

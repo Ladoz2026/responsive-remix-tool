@@ -27,7 +27,11 @@ type WpAnnonce = {
 };
 
 const num = (v: unknown): number => {
-  const n = Number(v);
+  if (v === null || v === undefined || v === "") return 0;
+  const cleaned = String(v)
+    .replace(/[\s\u00A0]/g, "") // espaces normaux et insécables
+    .replace(/,/g, "."); // virgule décimale éventuelle
+  const n = Number(cleaned);
   return Number.isFinite(n) ? n : 0;
 };
 
