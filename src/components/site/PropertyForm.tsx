@@ -119,7 +119,7 @@ export function PropertyForm({
             className={field}
           >
             {TRANSACTIONS.map((t) => (
-              <option key={t.value} value={t.label}>
+              <option key={t.label} value={t.label}>
                 {t.label}
               </option>
             ))}
@@ -130,7 +130,7 @@ export function PropertyForm({
             className={field}
           >
             {PROPERTY_TYPES.map((t) => (
-              <option key={t.value} value={t.label}>
+              <option key={t.label} value={t.label}>
                 {t.label}
               </option>
             ))}
