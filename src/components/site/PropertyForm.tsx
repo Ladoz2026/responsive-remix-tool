@@ -53,6 +53,7 @@ export function PropertyForm({
       chambres: String(f.get("bedrooms") ?? "0"),
       salles_de_bain: String(f.get("bathrooms") ?? "0"),
       photos_urls: images.join(","),
+      owner_uid: userId,
       contact_nom: String(f.get("contact_nom") ?? ""),
       contact_telephone: String(f.get("contact_telephone") ?? ""),
       contact_email: String(f.get("contact_email") ?? ""),
