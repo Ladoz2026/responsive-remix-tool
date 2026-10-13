@@ -6,12 +6,9 @@ import {
   useRouter,
   HeadContent,
   Scripts,
-} from "@tanstack/react-router";
-import {
-  useEffect,
   type ErrorComponentProps,
-  type ReactNode,
-} from "react";
+} from "@tanstack/react-router";
+import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
