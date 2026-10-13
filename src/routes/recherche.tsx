@@ -4,17 +4,20 @@ import { Header } from "@/components/site/Header";
 import { CtaFooter } from "@/components/site/CtaFooter";
 import { SearchForm } from "@/components/site/SearchForm";
 import { PropertyCard } from "@/components/site/PropertyCard";
-import {
-  buildLabels,
-  propertiesSearchQuery,
-  referenceQuery,
-  toCardData,
-  type SearchFilters,
-} from "@/lib/immobilier-queries";
+import { wpAnnoncesQuery } from "@/lib/wordpress-annonces";
+import type { SearchFilters } from "@/lib/immobilier-queries";
 
 const title = "Recherche de biens — SeLoger CI";
 const description =
-  "Filtrez les annonces immobilières par ville, commune, quartier, prix, transaction, catégorie et type de bien en Côte d'Ivoire.";
+  "Filtrez les annonces immobilières par prix, transaction et type de bien en Côte d'Ivoire.";
+
+// Compare sans tenir compte des accents ni des majuscules
+const norm = (s: string | null | undefined) =>
+  (s ?? "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .trim();
 
 export const Route = createFileRoute("/recherche")({
   validateSearch: (search: Record<string, unknown>): SearchFilters => ({
@@ -43,10 +46,19 @@ export const Route = createFileRoute("/recherche")({
 
 function SearchPage() {
   const filters = Route.useSearch();
-  const { data, isLoading, error } = useQuery(propertiesSearchQuery(filters));
-  const { data: reference } = useQuery(referenceQuery);
-  const labels = buildLabels(reference);
-  const items = (data ?? []).map((row) => toCardData(row, labels));
+  const { data, isLoading, error } = useQuery(wpAnnoncesQuery);
+
+  const items = (data ?? []).filter((p) => {
+    if (filters.transaction && norm(p.transaction) !== norm(filters.transaction)) return false;
+    if (filters.propertyType && norm(p.property_type) !== norm(filters.propertyType)) return false;
+    if (filters.minPrice !== undefined && p.price < filters.minPrice) return false;
+    if (filters.maxPrice !== undefined && p.price > filters.maxPrice) return false;
+    if (filters.q) {
+      const text = norm([p.title, p.city, p.district ?? "", p.property_type].join(" "));
+      if (!text.includes(norm(filters.q))) return false;
+    }
+    return true;
+  });
 
   return (
     <div className="min-h-screen bg-background font-sans">
