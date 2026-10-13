@@ -11,9 +11,9 @@ const env = import.meta.env as Record<string, string | undefined>;
 
 // Valeurs de repli (clé publique anon, sûre côté client) pour éviter tout
 // plantage si .env.local est absent ou régénéré par la plateforme.
-const FALLBACK_URL = "https://jilihrowleimacfrujgb.supabase.co";
-const FALLBACK_KEY = "sb_publishable_IVDWwoPhVQ0Tmsr7OdxX_A_js7D7o99";
-const FALLBACK_PROJECT_ID = "jilihrowleimacfrujgb";
+   const FALLBACK_URL = "https://jjgzeditmhmrksihrvaj.supabase.co";
+   const FALLBACK_KEY = "sb_publishable_FXT3UF3G7asL9k4fQsEl9A_4FJxUQlD";
+   const FALLBACK_PROJECT_ID = "jjgzeditmhmrksihrvaj";
 
 // NB : on n'utilise PAS VITE_SUPABASE_* ici — le client applicatif doit
 // pointer exclusivement vers le projet externe « immobilier ».
