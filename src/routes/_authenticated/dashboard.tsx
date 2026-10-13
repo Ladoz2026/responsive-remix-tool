@@ -1,10 +1,10 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Plus, Pencil, Trash2, LogOut } from "lucide-react";
-import { toast } from "sonner";
+import { Plus, LogOut } from "lucide-react";
 import { Header } from "@/components/site/Header";
-import { myLeadsQuery, myPropertiesQuery } from "@/lib/property-queries";
-import { formatDate, formatPrice, typeLabel } from "@/lib/format";
+import { myLeadsQuery } from "@/lib/property-queries";
+import { wpMesAnnoncesQuery } from "@/lib/wordpress-mes-annonces";
+import { formatDate, formatPrice } from "@/lib/format";
 import { supabase } from "@/integrations/supabase/app-client";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
@@ -25,18 +25,8 @@ function Dashboard() {
   const { user } = Route.useRouteContext();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { data: properties } = useQuery(myPropertiesQuery(user.id));
+  const { data: properties, isLoading } = useQuery(wpMesAnnoncesQuery(user.id));
   const { data: leads } = useQuery(myLeadsQuery(user.id));
-
-  async function remove(id: string) {
-    if (!confirm("Supprimer définitivement cette annonce ?")) return;
-    const { error } = await supabase.from("properties").delete().eq("id", id);
-    if (error) toast.error(error.message);
-    else {
-      toast.success("Annonce supprimée");
-      queryClient.invalidateQueries({ queryKey: ["my-properties"] });
-    }
-  }
 
   async function signOut() {
     await queryClient.cancelQueries();
@@ -45,7 +35,7 @@ function Dashboard() {
     navigate({ to: "/auth", search: { next: undefined }, replace: true });
   }
 
-  const published = (properties ?? []).filter((p) => p.status === "publie").length;
+  const published = (properties ?? []).filter((p) => p.statut === "Publiée").length;
 
   return (
     <div className="min-h-screen bg-secondary/40 font-sans">
@@ -92,7 +82,9 @@ function Dashboard() {
           <h2 className="border-b border-border p-6 text-lg font-bold text-foreground">
             Mes annonces
           </h2>
-          {(properties ?? []).length === 0 ? (
+          {isLoading ? (
+            <p className="p-6 text-muted-foreground">Chargement…</p>
+          ) : (properties ?? []).length === 0 ? (
             <p className="p-6 text-muted-foreground">
               Aucune annonce pour l'instant. Créez votre première annonce.
             </p>
@@ -103,27 +95,13 @@ function Dashboard() {
                   <div className="min-w-0 flex-1">
                     <p className="truncate font-semibold text-foreground">{p.title}</p>
                     <p className="text-sm text-muted-foreground">
-                      {typeLabel(p.property_type)} · {p.city} ·{" "}
-                      {formatPrice(p.price, p.currency ?? "FCFA")}
+                      {p.type_bien} · {p.quartier ? `${p.quartier}, ` : ""}
+                      {p.ville} · {formatPrice(p.prix, p.unite)}
                     </p>
                   </div>
                   <span className="rounded-full bg-secondary px-3 py-1 text-xs font-semibold text-foreground">
-                    {p.status}
+                    {p.statut}
                   </span>
-                  <Link
-                    to="/annonces/$id"
-                    params={{ id: p.id }}
-                    className="inline-flex items-center gap-1.5 rounded-full border border-border px-4 py-2 text-xs font-semibold text-foreground"
-                  >
-                    <Pencil className="h-3.5 w-3.5" /> Modifier
-                  </Link>
-                  <button
-                    type="button"
-                    onClick={() => remove(p.id)}
-                    className="inline-flex items-center gap-1.5 rounded-full border border-border px-4 py-2 text-xs font-semibold text-destructive"
-                  >
-                    <Trash2 className="h-3.5 w-3.5" /> Supprimer
-                  </button>
                 </li>
               ))}
             </ul>
