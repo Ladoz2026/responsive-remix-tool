@@ -136,4 +136,20 @@ export function SearchForm({
           placeholder="Prix max (FCFA)"
           className={fieldClass}
           value={filters.maxPrice ?? ""}
+          onChange={(e) => set("maxPrice", e.target.value)}
+        />
+
+        <button
+          type="submit"
+          className="rounded-xl gold-gradient px-6 py-2.5 text-sm font-bold text-accent-foreground shadow-gold sm:col-span-2 lg:col-span-3"
+        >
+          <span className="inline-flex items-center justify-center gap-2">
+            <Search className="h-4 w-4" />
+            Rechercher
+          </span>
+        </button>
+      </div>
+    </form>
+  );
+}
           onChange={(e) => set("maxPrice",
