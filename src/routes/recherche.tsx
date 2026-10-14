@@ -51,6 +51,8 @@ function SearchPage() {
   const items = (data ?? []).filter((p) => {
     if (filters.transaction && norm(p.transaction) !== norm(filters.transaction)) return false;
     if (filters.propertyType && norm(p.property_type) !== norm(filters.propertyType)) return false;
+        if (filters.cityId && norm(p.city) !== norm(filters.cityId)) return false;
+    if (filters.districtId && norm(p.district) !== norm(filters.districtId)) return false;
     if (filters.minPrice !== undefined && p.price < filters.minPrice) return false;
     if (filters.maxPrice !== undefined && p.price > filters.maxPrice) return false;
     if (filters.q) {
