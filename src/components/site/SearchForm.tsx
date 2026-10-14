@@ -152,4 +152,4 @@ export function SearchForm({
     </form>
   );
 }
-          onChange={(e) => set("maxPrice",
+
