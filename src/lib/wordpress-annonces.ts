@@ -4,6 +4,17 @@ import { SUPABASE_URL } from "@/integrations/supabase/immobilier";
 
 const API_URL = "https://api-seloger-ci.poroinfo.net/wp-json/wp/v2/annonces?_embed&per_page=50";
 const PHOTOS_BASE = `${SUPABASE_URL}/storage/v1/object/public/property-images/`;
+export function decodeHtml(html: string | null | undefined): string {
+  return (html ?? "")
+    .replace(/<[^>]*>/g, "")
+    .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(Number(n)))
+    .replace(/&nbsp;/g, " ")
+    .replace(/&quot;/g, '"')
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&amp;/g, "&")
+    .trim();
+}
 
 type WpMedia = { source_url?: string; media_details?: { sizes?: Record<string, { source_url: string }> } };
 
@@ -54,7 +65,7 @@ export function wpAnnonceToCard(a: WpAnnonce): PropertyCardData {
   const acf = a.acf ?? {};
   return {
     id: String(a.id),
-    title: a.title?.rendered ?? "Annonce",
+    title: decodeHtml(a.title?.rendered) || "Annonce",
     price: num(acf.prix),
     currency: acf.unite_prix || "FCFA",
     city: acf.ville || "",
@@ -68,7 +79,7 @@ export function wpAnnonceToCard(a: WpAnnonce): PropertyCardData {
     image_url: featuredImage(a) ?? sellerPhoto(a),
     type_label: acf.type_bien || null,
     transaction_label: acf.type_transaction || null,
-    detail_path: null,
+    detail_path: `/bien/${a.id}`,
     is_verified: (acf.badges ?? []).includes("Vérifié"),
     is_featured: (acf.badges ?? []).includes("À la une"),
   };
